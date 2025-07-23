@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Explainer: The Problems with DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate for base, Red for problems, Indigo for solution hints -->
+    <!-- Application Structure Plan: The application is designed as a single, scrollable narrative page. It is divided into four thematic sections, each corresponding to a core problem from the source document. This structure guides the user logically through the issues, building a case for a new solution. Interactive diagrams in each section allow users to actively engage with the concepts rather than passively reading, which enhances comprehension and retention. -->
+    <!-- Visualization & Content Choices: 1. SPOF: A CSS diagram comparing centralized vs. decentralized networks, with a hover interaction to simulate failure. 2. Security: Interactive "threat cards" for DDoS and Cache Poisoning that flip on click to reveal an explanation. 3. Censorship: A visual hierarchy diagram with a button to simulate a domain takedown. 4. Complexity: A CSS-based flowchart showing the multiple steps in domain registration. These choices turn abstract threats into tangible, visual demonstrations. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .problem-card {
+            transition: transform 0.3s ease;
+        }
+        .problem-card:hover {
+            transform: translateY(-5px);
+        }
+        .symmetrical-line {
+            position: absolute;
+            background-color: #e2e8f0; /* slate-200 */
+            height: 2px;
+            transform-origin: left;
+            transition: opacity 0.3s ease;
+        }
+        .node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        #central-hub-container:hover #central-hub {
+            background-color: #dc2626 !important; /* red-600 */
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        #central-hub-container:hover .symmetrical-line,
+        #central-hub-container:hover .user-node {
+            opacity: 0.1;
+        }
+        .threat-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .threat-card.flipped .threat-card-inner {
+            transform: rotateY(180deg);
+        }
+        .threat-card-front, .threat-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+        .threat-card-back {
+            transform: rotateY(180deg);
+        }
+        .flow-step {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .flow-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            color: #94a3b8; /* slate-400 */
+            font-size: 1.5rem;
+            display: none; /* Hidden by default */
+        }
+        @media (min-width: 1024px) {
+            .flow-step:not(:last-child)::after {
+                display: block;
+                right: -2rem;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12 sm:my-16">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">The DNS Problem: A Visual Guide</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">The internet's Domain Name System is critical, but its outdated design has serious flaws. Let's explore why a change is needed.</p>
+        </header>
+
+        <main class="space-y-20 sm:space-y-24">
+
+            <section id="problem-centralization">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2">1. Centralization & Single Points of Failure</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">The traditional DNS system relies on a few central authorities. If they fail, the network breaks. Hover over the central hub below to see what happens.</p>
+                    <div id="central-hub-container" class="relative h-72 w-full cursor-pointer">
+                        <div id="centralization-diagram" class="w-full h-full">
+                            <div id="central-hub" class="node w-24 h-24 bg-indigo-600" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">ICANN</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="problem-security">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2">2. Security Vulnerabilities</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">The protocol is susceptible to numerous attacks that can disrupt services and deceive users. Click on the cards to learn more.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="problem-card threat-card h-64 cursor-pointer group [perspective:1000px]">
+                            <div class="threat-card-inner">
+                                <div class="threat-card-front bg-slate-50 rounded-2xl shadow-md border border-slate-200">
+                                    <div class="text-5xl mb-4">🌪️</div>
+                                    <h3 class="text-xl font-bold text-slate-800">DDoS Attacks</h3>
+                                    <p class="text-slate-500 mt-2">Click to see how</p>
+                                </div>
+                                <div class="threat-card-back bg-red-500 text-white rounded-2xl shadow-lg">
+                                    <h3 class="text-xl font-bold">Overwhelmed Server</h3>
+                                    <p class="mt-2">Attackers flood a DNS server with traffic, making it unavailable for legitimate users and taking down all associated websites.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="problem-card threat-card h-64 cursor-pointer group [perspective:1000px]">
+                            <div class="threat-card-inner">
+                                <div class="threat-card-front bg-slate-50 rounded-2xl shadow-md border border-slate-200">
+                                    <div class="text-5xl mb-4">🎭</div>
+                                    <h3 class="text-xl font-bold text-slate-800">Cache Poisoning</h3>
+                                    <p class="text-slate-500 mt-2">Click to see how</p>
+                                </div>
+                                <div class="threat-card-back bg-red-500 text-white rounded-2xl shadow-lg">
+                                    <h3 class="text-xl font-bold">User Misdirection</h3>
+                                    <p class="mt-2">Attackers inject false information into DNS caches, redirecting users from real sites to malicious ones to steal data.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="problem-censorship">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2">3. Censorship & Lack of Sovereignty</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">The centralized control structure allows authorities to block or remove domains, limiting free expression and organizational autonomy.</p>
+                    <div class="text-center">
+                        <div class="flex justify-center items-center flex-wrap gap-4 font-semibold text-white">
+                            <div class="node bg-indigo-600 w-28 h-14 rounded-lg">Authority</div>
+                            <div class="text-2xl text-slate-400">→</div>
+                            <div class="node bg-indigo-500 w-28 h-14 rounded-lg">Registry</div>
+                            <div class="text-2xl text-slate-400">→</div>
+                            <div id="user-domain" class="node bg-indigo-400 w-28 h-14 rounded-lg transition-all duration-500">Your Domain</div>
+                        </div>
+                        <button id="censor-btn" class="mt-8 bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors">Enforce Takedown</button>
+                        <p id="censor-status" class="mt-4 text-red-600 font-medium h-6 opacity-0 transition-opacity">Your domain has been removed from the network.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="problem-complexity">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2">4. Inefficiency & Complexity</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">Registering or updating a domain involves a slow, multi-step process with several intermediaries, creating administrative overhead.</p>
+                    <div class="flex flex-col lg:flex-row flex-wrap justify-center items-center gap-x-16 gap-y-8">
+                        <div class="flow-step p-4 bg-slate-100 rounded-lg text-center w-40">
+                            <div class="font-bold">1. User</div>
+                            <div class="text-sm text-slate-500">Initiates Request</div>
+                        </div>
+                        <div class="flow-step p-4 bg-slate-100 rounded-lg text-center w-40">
+                            <div class="font-bold">2. Registrar</div>
+                            <div class="text-sm text-slate-500">Processes Order</div>
+                        </div>
+                        <div class="flow-step p-4 bg-slate-100 rounded-lg text-center w-40">
+                            <div class="font-bold">3. Registry</div>
+                            <div class="text-sm text-slate-500">Updates TLD</div>
+                        </div>
+                        <div class="flow-step p-4 bg-slate-100 rounded-lg text-center w-40">
+                            <div class="font-bold">4. DNS Propagation</div>
+                            <div class="text-sm text-slate-500">Waits for update</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="text-center py-12">
+                <h2 class="text-3xl font-bold text-indigo-600">A Paradigm Shift is Needed</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">These challenges highlight the need for a decentralized, secure, and sovereign system. Our project proposes a blockchain-based solution to fundamentally solve these problems.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const diagramContainer = document.getElementById('centralization-diagram');
+            const hub = document.getElementById('central-hub');
+            const numNodes = 8;
+            
+            const drawDiagram = () => {
+                // Clear existing nodes and lines
+                diagramContainer.innerHTML = '<div id="central-hub" class="node w-24 h-24 bg-indigo-600" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">ICANN</div>';
+                const hubEl = document.getElementById('central-hub');
+                const radius = Math.min(diagramContainer.clientWidth, diagramContainer.clientHeight) / 2 - 50;
+
+                for (let i = 0; i < numNodes; i++) {
+                    const angle = (i / numNodes) * 2 * Math.PI;
+                    const x = Math.cos(angle) * radius + diagramContainer.clientWidth / 2;
+                    const y = Math.sin(angle) * radius + diagramContainer.clientHeight / 2;
+                    
+                    const node = document.createElement('div');
+                    node.className = 'node user-node w-8 h-8 bg-slate-500';
+                    node.style.left = `${x - 16}px`;
+                    node.style.top = `${y - 16}px`;
+                    diagramContainer.appendChild(node);
+
+                    const line = document.createElement('div');
+                    const hubX = diagramContainer.clientWidth / 2;
+                    const hubY = diagramContainer.clientHeight / 2;
+                    
+                    const length = Math.sqrt(Math.pow(x - hubX, 2) + Math.pow(y - hubY, 2));
+                    const lineAngle = Math.atan2(y - hubY, x - hubX) * (180 / Math.PI);
+                    
+                    line.className = 'symmetrical-line';
+                    line.style.width = `${length}px`;
+                    line.style.left = `${hubX}px`;
+                    line.style.top = `${hubY}px`;
+                    line.style.transform = `rotate(${lineAngle}deg)`;
+                    diagramContainer.appendChild(line);
+                }
+            };
+            
+            const debounce = (func, delay) => {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            };
+
+            window.addEventListener('resize', debounce(drawDiagram, 100));
+            drawDiagram();
+
+            // --- Problem 2: Security Cards ---
+            const threatCards = document.querySelectorAll('.threat-card');
+            threatCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('flipped');
+                });
+            });
+
+            // --- Problem 3: Censorship ---
+            const censorBtn = document.getElementById('censor-btn');
+            const userDomain = document.getElementById('user-domain');
+            const censorStatus = document.getElementById('censor-status');
+            let isCensored = false;
+
+            censorBtn.addEventListener('click', () => {
+                isCensored = !isCensored;
+                if (isCensored) {
+                    userDomain.style.opacity = '0.2';
+                    userDomain.style.transform = 'scale(0.9)';
+                    censorStatus.style.opacity = '1';
+                    censorBtn.textContent = 'Restore Domain';
+                } else {
+                    userDomain.style.opacity = '1';
+                    userDomain.style.transform = 'scale(1)';
+                    censorStatus.style.opacity = '0';
+                    censorBtn.textContent = 'Enforce Takedown';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
