@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Explainer: A Fault-Tolerant Decentralized DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate & Indigo -->
+    <!-- Application Structure Plan: The SPA is designed as a guided, vertical-scrolling story. A top navigation bar allows users to jump to key sections: The Problem, The Solution, Our Innovation, and System Architecture. This structure transforms the dense abstract into a logical narrative, starting with the 'why' and progressively revealing the 'how'. The highlight is an interactive simulation of the consensus mechanism, designed to make the project's core innovation tangible and easy to grasp. -->
+    <!-- Visualization & Content Choices: Report Info: DNS concepts, PoA consensus, system architecture. Goal: Explain a complex technical system. Viz/Presentation Method: 1) A CSS diagram comparing centralized vs. decentralized DNS. 2) An interactive simulation of the Round-Robin PoA with a "Simulate Failure" button. 3) A stepper/timeline for the request lifecycle. Interaction: Scroll-based navigation, button clicks to trigger simulations and advance steps. Justification: Visual, interactive explanations are far more effective for technical concepts than text alone. The simulation directly demonstrates the system's fault tolerance, its key selling point. Library/Method: Vanilla JS for all interactions and state management. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link.active {
+            color: #4f46e5; /* indigo-600 */
+            font-weight: 600;
+            border-bottom-color: #4f46e5;
+        }
+        .diagram-node {
+            transition: all 0.3s ease-in-out;
+        }
+        .leader-node {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .leader-node.active {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.7);
+            background-color: #4f46e5; /* indigo-600 */
+        }
+        .leader-node.failed {
+            background-color: #ef4444; /* red-500 */
+            transform: scale(0.9);
+            opacity: 0.6;
+        }
+        .progress-bar {
+            transition: width 0.2s linear;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-bold text-lg text-slate-800">Decentralized DNS</div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#problem" class="nav-link text-slate-600 hover:text-indigo-600 px-3 py-2 border-b-2 border-transparent">The Problem</a>
+                        <a href="#solution" class="nav-link text-slate-600 hover:text-indigo-600 px-3 py-2 border-b-2 border-transparent">The Solution</a>
+                        <a href="#innovation" class="nav-link text-slate-600 hover:text-indigo-600 px-3 py-2 border-b-2 border-transparent">Our Innovation</a>
+                        <a href="#architecture" class="nav-link text-slate-600 hover:text-indigo-600 px-3 py-2 border-b-2 border-transparent">Architecture</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container mx-auto px-4 sm:px-6 lg:p-8 space-y-20 sm:space-y-24">
+            
+            <section id="hero" class="text-center pt-12 sm:pt-16">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight">A Fault-Tolerant, Decentralized DNS</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg sm:text-xl text-slate-600">An interactive exploration of a next-generation Domain Name System built on a private blockchain for ultimate security, resilience, and sovereignty.</p>
+            </section>
+
+            <section id="problem" class="scroll-mt-20">
+                <h2 class="text-3xl font-bold text-center text-slate-900">The Problem with Traditional DNS</h2>
+                <p class="mt-4 max-w-2xl mx-auto text-center text-slate-600">The current DNS system is centralized, creating single points of failure that make it vulnerable to attacks and censorship.</p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-red-200">
+                        <h3 class="font-bold text-xl text-center text-red-600 mb-4">Centralized Model</h3>
+                        <div class="relative h-48 flex justify-center items-center">
+                            <div class="diagram-node w-16 h-16 bg-red-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">DNS</div>
+                            <div class="absolute diagram-node w-8 h-8 bg-slate-600 rounded-full text-white text-xs flex items-center justify-center" style="top:0; left: 10%;">U1</div>
+                            <div class="absolute diagram-node w-8 h-8 bg-slate-600 rounded-full text-white text-xs flex items-center justify-center" style="top:10%; right: 5%;">U2</div>
+                            <div class="absolute diagram-node w-8 h-8 bg-slate-600 rounded-full text-white text-xs flex items-center justify-center" style="bottom:0; left: 20%;">U3</div>
+                            <div class="absolute diagram-node w-8 h-8 bg-slate-600 rounded-full text-white text-xs flex items-center justify-center" style="bottom:10%; right: 25%;">U4</div>
+                        </div>
+                        <p class="mt-4 text-center text-slate-600">If the central server fails, the entire network goes down. It's a single point of failure (SPOF).</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-green-200">
+                        <h3 class="font-bold text-xl text-center text-green-600 mb-4">Our Decentralized Solution</h3>
+                        <div class="relative h-48">
+                            <div class="absolute diagram-node w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold" style="top:10%; left: 15%;">N1</div>
+                            <div class="absolute diagram-node w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold" style="top:10%; right: 15%;">N2</div>
+                            <div class="absolute diagram-node w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold" style="bottom:10%; left: 40%;">N3</div>
+                             <div class="absolute diagram-node w-12 h-12 bg-red-500 opacity-50 rounded-full flex items-center justify-center text-white font-bold" style="top:50%; right: 35%; transform: translateY(-50%);">N4</div>
+                        </div>
+                        <p class="mt-4 text-center text-slate-600">If one node fails (N4), the network continues to operate perfectly. There is no single point of failure.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="solution" class="scroll-mt-20 text-center">
+                 <h2 class="text-3xl font-bold text-slate-900">The Blockchain Solution</h2>
+                 <p class="mt-4 max-w-3xl mx-auto text-slate-600">We propose a private, permissioned blockchain to store DNS records. This creates an immutable, auditable, and censorship-resistant ledger of all domain name activity, collectively maintained by a network of trusted nodes.</p>
+            </section>
+
+            <section id="innovation" class="scroll-mt-20">
+                <h2 class="text-3xl font-bold text-center text-slate-900">Our Innovation: Fault-Tolerant Consensus</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-center text-slate-600">The heart of our system is a **Round-Robin Proof of Authority (PoA) with a Timeout**. This makes our network efficient, predictable, and highly resilient. Watch it in action below.</p>
+                <div class="mt-12 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <div class="flex justify-center items-center space-x-4 sm:space-x-8 h-48" id="leader-ring">
+                        <div id="leader-0" class="leader-node w-20 h-20 sm:w-24 sm:h-24 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L1</div>
+                        <div id="leader-1" class="leader-node w-20 h-20 sm:w-24 sm:h-24 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L2</div>
+                        <div id="leader-2" class="leader-node w-20 h-20 sm:w-24 sm:h-24 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L3</div>
+                        <div id="leader-3" class="leader-node w-20 h-20 sm:w-24 sm:h-24 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L4</div>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <p id="consensus-status" class="text-slate-600 h-6">Leader L1's turn to create a block...</p>
+                        <div id="timeout-bar-container" class="w-full bg-slate-200 rounded-full h-2.5 mt-2 hidden">
+                          <div id="timeout-bar" class="bg-yellow-400 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <button id="toggle-consensus-btn" class="px-5 py-2.5 font-medium bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg">Pause</button>
+                        <button id="fail-node-btn" class="px-5 py-2.5 font-medium bg-red-50 hover:bg-red-100 text-red-600 rounded-lg">Simulate Leader Failure</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="architecture" class="scroll-mt-20">
+                <h2 class="text-3xl font-bold text-center text-slate-900">System Architecture & Lifecycle</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-center text-slate-600">Our system uses two node types and a simple, secure process for handling DNS requests. Explore the lifecycle of a domain registration below.</p>
+                <div class="mt-12 bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <div id="lifecycle-stepper" class="flex flex-col md:flex-row gap-8">
+                        <div class="md:w-1/3">
+                            <ul class="space-y-2">
+                                <li data-step="0" class="lifecycle-step cursor-pointer p-3 rounded-lg font-semibold bg-indigo-100 text-indigo-700">Step 1: Request Initiation</li>
+                                <li data-step="1" class="lifecycle-step cursor-pointer p-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Step 2: Transaction Broadcast</li>
+                                <li data-step="2" class="lifecycle-step cursor-pointer p-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Step 3: Block Creation</li>
+                                <li data-step="3" class="lifecycle-step cursor-pointer p-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100">Step 4: Network Confirmation</li>
+                            </ul>
+                        </div>
+                        <div class="md:w-2/3">
+                            <div id="step-content-0" class="step-content">
+                                <h4 class="font-bold text-xl mb-2">Request Initiation</h4>
+                                <p class="text-slate-600">A user sends a signed request to register `mydomain.com` from a **Normal Node**. This node acts as the user's entry point into the network.</p>
+                            </div>
+                            <div id="step-content-1" class="step-content hidden">
+                                <h4 class="font-bold text-xl mb-2">Transaction Broadcast</h4>
+                                <p class="text-slate-600">The Normal Node creates a transaction and broadcasts it to all other nodes in the peer-to-peer network, including the powerful **Leader Nodes**.</p>
+                            </div>
+                            <div id="step-content-2" class="step-content hidden">
+                                <h4 class="font-bold text-xl mb-2">Block Creation</h4>
+                                <p class="text-slate-600">The current active Leader (e.g., L3) validates the transaction, includes it in a new block, signs the block, and adds it to its local chain.</p>
+                            </div>
+                            <div id="step-content-3" class="step-content hidden">
+                                <h4 class="font-bold text-xl mb-2">Network Confirmation</h4>
+                                <p class="text-slate-600">The new block is broadcast to the entire network. All other nodes verify it and add it to their chains. The domain is now permanently and immutably registered.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="text-center py-8 mt-16 border-t border-slate-200">
+        <p class="text-slate-500">A conceptual demonstration of a decentralized DNS system.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Nav Scrollspy ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            const id = link.getAttribute('href').substring(1);
+                            link.classList.toggle('active', id === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px' });
+            sections.forEach(section => observer.observe(section));
+
+            // --- Consensus Simulation ---
+            const leaderNodes = document.querySelectorAll('.leader-node');
+            const statusEl = document.getElementById('consensus-status');
+            const toggleBtn = document.getElementById('toggle-consensus-btn');
+            const failBtn = document.getElementById('fail-node-btn');
+            const timeoutBarContainer = document.getElementById('timeout-bar-container');
+            const timeoutBar = document.getElementById('timeout-bar');
+            
+            let currentLeader = 0;
+            let isPaused = false;
+            let consensusInterval;
+            let failedNodes = new Set();
+            let timeoutProgress = 0;
+            let timeoutInterval;
+
+            const runConsensus = () => {
+                if (isPaused) return;
+                
+                // Find next non-failed leader
+                let nextLeaderFound = false;
+                for(let i = 0; i < leaderNodes.length; i++) {
+                    currentLeader = (currentLeader + 1) % leaderNodes.length;
+                    if (!failedNodes.has(currentLeader)) {
+                        nextLeaderFound = true;
+                        break;
+                    }
+                }
+
+                if (!nextLeaderFound) {
+                    statusEl.textContent = "All leaders have failed! Network halted.";
+                    clearInterval(consensusInterval);
+                    return;
+                }
+
+                leaderNodes.forEach((node, index) => {
+                    node.classList.remove('active');
+                    if (index === currentLeader) {
+                        node.classList.add('active');
+                        statusEl.textContent = `Leader L${index + 1}'s turn to create a block...`;
+                    }
+                });
+            };
+
+            const startInterval = () => {
+                consensusInterval = setInterval(runConsensus, 2000);
+            };
+
+            toggleBtn.addEventListener('click', () => {
+                isPaused = !isPaused;
+                toggleBtn.textContent = isPaused ? 'Resume' : 'Pause';
+                if (!isPaused) {
+                    runConsensus();
+                    startInterval();
+                } else {
+                    clearInterval(consensusInterval);
+                }
+            });
+
+            failBtn.addEventListener('click', () => {
+                if (failedNodes.has(currentLeader)) return;
+                
+                const failingLeaderIndex = currentLeader;
+                const failingNode = leaderNodes[failingLeaderIndex];
+                
+                failedNodes.add(failingLeaderIndex);
+                failingNode.classList.add('failed');
+                failingNode.classList.remove('active');
+                statusEl.textContent = `Leader L${failingLeaderIndex + 1} failed! Initiating timeout...`;
+                
+                clearInterval(consensusInterval);
+                
+                timeoutBarContainer.style.display = 'block';
+                timeoutProgress = 0;
+                timeoutBar.style.width = '0%';
+
+                timeoutInterval = setInterval(() => {
+                    timeoutProgress += 10;
+                    timeoutBar.style.width = `${timeoutProgress}%`;
+                    if (timeoutProgress >= 100) {
+                        clearInterval(timeoutInterval);
+                        timeoutBarContainer.style.display = 'none';
+                        statusEl.textContent = `Timeout! Skipping failed leader L${failingLeaderIndex + 1}.`;
+                        setTimeout(() => {
+                            if (!isPaused) {
+                                runConsensus();
+                                startInterval();
+                            }
+                        }, 1000);
+                    }
+                }, 150);
+            });
+
+            runConsensus();
+            startInterval();
+
+            // --- Lifecycle Stepper ---
+            const steps = document.querySelectorAll('.lifecycle-step');
+            const stepContents = document.querySelectorAll('.step-content');
+            
+            steps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const stepIndex = step.dataset.step;
+                    
+                    steps.forEach(s => {
+                        s.classList.remove('bg-indigo-100', 'text-indigo-700');
+                        s.classList.add('text-slate-600', 'hover:bg-slate-100', 'font-medium');
+                    });
+                    step.classList.add('bg-indigo-100', 'text-indigo-700');
+                    step.classList.remove('text-slate-600', 'hover:bg-slate-100', 'font-medium');
+                    
+                    stepContents.forEach(content => {
+                        if (content.id === `step-content-${stepIndex}`) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
