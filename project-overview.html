@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Plan: Decentralized DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate & Indigo -->
+    <!-- Application Structure Plan: The application is designed as an interactive project dashboard. A fixed sidebar navigation allows users to jump between the key sections of the plan (Overview, Tech Stack, Implementation). This structure was chosen to transform a linear document into a non-linear, explorable format, allowing stakeholders to either get a quick overview or dive deep into the technical specifics of a particular phase without scrolling through irrelevant information. -->
+    <!-- Visualization & Content Choices: Report Info: Project plan sections. Goal: Organize and explain a complex technical plan. Viz/Presentation Method: Key sections are presented as cards and lists. The core implementation plan is visualized as a vertical stepper. Class definitions are shown as structured HTML cards resembling diagrams. Interaction: Clicking sidebar links scrolls to sections. Clicking the stepper reveals phase details. Justification: This interactive structure breaks down dense information into manageable chunks, improving readability and comprehension compared to a static document. Library/Method: Vanilla JS for scroll navigation and interactive elements. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .nav-link.active {
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #4338ca; /* indigo-700 */
+            font-weight: 600;
+        }
+        .phase-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .class-diagram {
+            border: 1px solid #e2e8f0; /* slate-200 */
+            background-color: #f8fafc; /* slate-50 */
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .class-diagram-header {
+            background-color: #eef2ff; /* indigo-50 */
+            color: #4f46e5; /* indigo-600 */
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0; /* slate-200 */
+        }
+        .class-diagram-body {
+            padding: 1rem;
+        }
+        .class-diagram-body h4 {
+            font-weight: 600;
+            color: #334155; /* slate-700 */
+            margin-bottom: 0.5rem;
+        }
+        .class-diagram-body ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .class-diagram-body li {
+            color: #475569; /* slate-600 */
+            padding: 0.25rem 0;
+            position: relative;
+            padding-left: 1.25rem;
+        }
+        .class-diagram-body li::before {
+            content: '•';
+            color: #6366f1; /* indigo-500 */
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="max-w-screen-xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-slate-900">Project Plan: Decentralized DNS</h1>
+            <p class="mt-2 text-lg text-slate-600">An interactive guide to the project architecture and implementation.</p>
+        </header>
+
+        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+            <aside class="lg:col-span-3 mb-8 lg:mb-0">
+                <nav class="sticky top-8">
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="nav-link block w-full text-left px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">Project Overview</a></li>
+                        <li><a href="#tech-stack" class="nav-link block w-full text-left px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">Technology Stack</a></li>
+                        <li><a href="#implementation" class="nav-link block w-full text-left px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors">Implementation Plan</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="lg:col-span-9">
+                <div id="content" class="space-y-12">
+                    
+                    <section id="overview" class="scroll-mt-24">
+                        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
+                            <h2 class="text-3xl font-bold text-indigo-600 mb-4">Project Overview</h2>
+                            <p class="text-slate-600 mb-6">This project involves the design and implementation of a secure, resilient, and decentralized Domain Name System (DNS) built upon a purpose-built permissioned blockchain. The proposed solution is a self-contained ecosystem for private or consortium networks where trust, data integrity, and high availability are paramount. We will develop a blockchain from scratch in Java, featuring a novel and highly efficient consensus mechanism: **Round-Robin Proof of Authority (PoA) with a Timeout**.</p>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-3">Abstract</h3>
+                            <p class="text-slate-600">The system leverages a custom Proof of Authority (PoA) consensus algorithm, implemented as a deterministic Round-Robin Leader Schedule with a fault-tolerant Timeout mechanism. This approach guarantees high availability and eliminates the computational overhead of traditional systems. The architecture consists of authorized Leader Nodes for block validation and Normal Nodes for query processing. All DNS records are stored immutably on-chain, ensuring data integrity and resistance to censorship. The result is a secure, resilient, and efficient DNS framework suitable for private and consortium networks.</p>
+                        </div>
+                    </section>
+
+                    <section id="tech-stack" class="scroll-mt-24">
+                        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
+                            <h2 class="text-3xl font-bold text-indigo-600 mb-6">Technology Stack</h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">Core Language</h4>
+                                    <p class="text-slate-600">Java 11 (or newer)</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">Cryptography</h4>
+                                    <p class="text-slate-600">Bouncy Castle</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">Data Serialization</h4>
+                                    <p class="text-slate-600">Jackson</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">Networking & API</h4>
+                                    <p class="text-slate-600">SparkJava / Java HttpServer</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">P2P Communication</h4>
+                                    <p class="text-slate-600">Java Sockets</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <h4 class="font-bold text-slate-800">Build Tool</h4>
+                                    <p class="text-slate-600">Maven or Gradle</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="implementation" class="scroll-mt-24">
+                        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
+                            <h2 class="text-3xl font-bold text-indigo-600 mb-6">Complete Implementation Plan</h2>
+                            <p class="text-slate-600 mb-8">The project is broken down into five distinct phases, from foundational data structures to final application integration. Click on each phase below to explore its components and objectives.</p>
+                            
+                            <div class="space-y-6">
+                                <!-- Phase 1 -->
+                                <details class="group phase-card bg-slate-50 rounded-xl border border-slate-200" open>
+                                    <summary class="p-4 cursor-pointer font-semibold text-lg text-slate-800 group-hover:bg-slate-100 rounded-t-xl">Phase 1: Core Data Structures</summary>
+                                    <div class="p-6 border-t border-slate-200">
+                                        <p class="text-slate-600 mb-6">Goal: Define the fundamental building blocks of the blockchain: Transactions, Blocks, and the Chain itself.</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            <div class="class-diagram">
+                                                <div class="class-diagram-header">Transaction Class</div>
+                                                <div class="class-diagram-body">
+                                                    <h4>Fields</h4>
+                                                    <ul><li>id</li><li>ownerPublicKey</li><li>domainName</li><li>ipAddress</li><li>timestamp</li><li>signature</li></ul>
+                                                </div>
+                                            </div>
+                                            <div class="class-diagram">
+                                                <div class="class-diagram-header">Block Class</div>
+                                                <div class="class-diagram-body">
+                                                    <h4>Fields</h4>
+                                                    <ul><li>blockNumber</li><li>previousHash</li><li>timestamp</li><li>transactions</li><li>creatorPublicKey</li><li>blockHash</li><li>blockSignature</li></ul>
+                                                </div>
+                                            </div>
+                                            <div class="class-diagram">
+                                                <div class="class-diagram-header">Blockchain Class</div>
+                                                <div class="class-diagram-body">
+                                                    <h4>Fields</h4>
+                                                    <ul><li>chain</li><li>pendingTransactions</li><li>leaderNodes</li></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </details>
+
+                                <!-- Phase 2 -->
+                                <details class="group phase-card bg-slate-50 rounded-xl border border-slate-200">
+                                    <summary class="p-4 cursor-pointer font-semibold text-lg text-slate-800 group-hover:bg-slate-100 rounded-t-xl">Phase 2: Cryptography and Core Logic</summary>
+                                    <div class="p-6 border-t border-slate-200">
+                                        <p class="text-slate-600 mb-6">Goal: Implement the security layer using cryptographic utilities and the core business logic for handling DNS registrations.</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div class="class-diagram">
+                                                <div class="class-diagram-header">CryptoUtil Class</div>
+                                                <div class="class-diagram-body">
+                                                    <h4>Methods</h4>
+                                                    <ul><li>generateKeyPair()</li><li>sign()</li><li>verify()</li><li>getSha256()</li></ul>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-semibold text-slate-800 text-lg mb-2">DNS Logic</h3>
+                                                <p class="text-slate-600">Implement logic within the `Blockchain` class to prevent duplicate domain registrations by iterating through the chain before accepting a new transaction.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </details>
+
+                                <!-- Phase 3 -->
+                                <details class="group phase-card bg-slate-50 rounded-xl border border-slate-200">
+                                    <summary class="p-4 cursor-pointer font-semibold text-lg text-slate-800 group-hover:bg-slate-100 rounded-t-xl">Phase 3: Consensus Mechanism</summary>
+                                    <div class="p-6 border-t border-slate-200">
+                                        <p class="text-slate-600 mb-6">Goal: Implement the Round-Robin Proof of Authority logic, which is the heart of the system's efficiency and fault tolerance.</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div>
+                                                <h3 class="font-semibold text-slate-800 text-lg mb-2">Consensus Loop: If Leader</h3>
+                                                <ul class="list-decimal list-inside text-slate-600 space-y-1">
+                                                    <li>Gather pending transactions.</li>
+                                                    <li>Create a new Block.</li>
+                                                    <li>Sign the block.</li>
+                                                    <li>Broadcast block to peers.</li>
+                                                    <li>Reset creation timer.</li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-semibold text-slate-800 text-lg mb-2">Consensus Loop: If Not Leader</h3>
+                                                <ul class="list-decimal list-inside text-slate-600 space-y-1">
+                                                    <li>Start a timeout timer (e.g., 15s).</li>
+                                                    <li>Listen for a block from the leader.</li>
+                                                    <li>If block received: add to chain, move to next leader.</li>
+                                                    <li>If timeout: assume leader failed, move to next leader.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </details>
+
+                                <!-- Phase 4 -->
+                                <details class="group phase-card bg-slate-50 rounded-xl border border-slate-200">
+                                    <summary class="p-4 cursor-pointer font-semibold text-lg text-slate-800 group-hover:bg-slate-100 rounded-t-xl">Phase 4: Networking and API</summary>
+                                    <div class="p-6 border-t border-slate-200">
+                                        <p class="text-slate-600 mb-6">Goal: Enable nodes to communicate with each other (P2P) and with end-users (REST API).</p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div>
+                                                <h3 class="font-semibold text-slate-800 text-lg mb-2">P2P Communication</h3>
+                                                <p class="text-slate-600">Use Java Sockets for a listener thread to receive broadcasted blocks and transactions from peers.</p>
+                                            </div>
+                                            <div>
+                                                <h3 class="font-semibold text-slate-800 text-lg mb-2">REST API Endpoints</h3>
+                                                <ul class="text-slate-600 space-y-1 font-mono text-sm">
+                                                    <li><span class="font-semibold text-green-600">POST</span> /transactions/new</li>
+                                                    <li><span class="font-semibold text-blue-600">GET</span> /dns/:domain</li>
+                                                    <li><span class="font-semibold text-blue-600">GET</span> /chain</li>
+                                                    <li><span class="font-semibold text-blue-600">GET</span> /status</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </details>
+
+                                <!-- Phase 5 -->
+                                <details class="group phase-card bg-slate-50 rounded-xl border border-slate-200">
+                                    <summary class="p-4 cursor-pointer font-semibold text-lg text-slate-800 group-hover:bg-slate-100 rounded-t-xl">Phase 5: Integration and Final Application</summary>
+                                    <div class="p-6 border-t border-slate-200">
+                                        <p class="text-slate-600">Goal: Tie all modules together into a single runnable application and define the testing strategy.</p>
+                                        <h3 class="font-semibold text-slate-800 text-lg mt-4 mb-2">Testing Strategy</h3>
+                                        <p class="text-slate-600">Run multiple instances on different ports to test the full lifecycle: registration, broadcast, block creation, peer synchronization, and leader failure/timeout.</p>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.3
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
