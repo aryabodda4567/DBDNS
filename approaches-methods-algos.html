@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard: System Methods & Algorithms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate (base), Indigo (core tech), Green (security), Red (failure) -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard with three main modules: "Core Approach," "Consensus Method," and "Supporting Algorithms." This modular structure allows users to explore each technical layer of the project at their own pace. The centerpiece is the interactive consensus simulation, which turns the most complex part of the document into an engaging and educational experience. -->
+    <!-- Visualization & Content Choices: 1. Core Approach: Icon-based feature cards for the benefits of a permissioned chain. 2. Consensus Method: A dynamic simulation of the Round-Robin PoA algorithm, including a "Simulate Failure" button to demonstrate the timeout mechanism. 3. Supporting Algorithms: Clear, concise cards with icons explaining ECDSA, SHA-256, and P2P Broadcast. This mix of static info and dynamic simulation is ideal for explaining complex technical architecture. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .feature-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .leader-node {
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .leader-node.active {
+            transform: scale(1.15) !important;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.7) !important;
+            background-color: #4f46e5 !important; /* indigo-600 */
+            color: white;
+        }
+        .leader-node.failed {
+            background-color: #ef4444 !important; /* red-500 */
+            transform: scale(0.9) !important;
+            opacity: 0.6;
+            color: white;
+        }
+        .progress-bar {
+            transition: width 0.2s linear;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">System Architecture Dashboard</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">An interactive exploration of the approaches, methods, and algorithms powering our decentralized DNS.</p>
+        </header>
+
+        <div class="space-y-12">
+            
+            <!-- Core Approach -->
+            <section id="core-approach">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2 text-indigo-600">1. Core Approach: Permissioned Blockchain</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">Our foundation is a private, permissioned blockchain chosen for three critical advantages in an enterprise environment.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="feature-card p-6 text-center">
+                            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
+                                <span class="text-2xl">🛡️</span>
+                            </div>
+                            <h3 class="mt-4 text-lg font-bold text-slate-800">Enhanced Security</h3>
+                            <p class="mt-1 text-slate-600">Restricting participation to known entities eliminates the risk of anonymous attacks and enhances network trust.</p>
+                        </div>
+                        <div class="feature-card p-6 text-center">
+                            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+                                <span class="text-2xl">⚡️</span>
+                            </div>
+                            <h3 class="mt-4 text-lg font-bold text-slate-800">High Performance</h3>
+                            <p class="mt-1 text-slate-600">Bypassing slow Proof-of-Work allows for higher throughput and lower latency, crucial for a responsive DNS service.</p>
+                        </div>
+                        <div class="feature-card p-6 text-center">
+                            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
+                                <span class="text-2xl">🏛️</span>
+                            </div>
+                            <h3 class="mt-4 text-lg font-bold text-slate-800">Governance & Control</h3>
+                            <p class="mt-1 text-slate-600">The consortium can establish and enforce its own rules for data privacy, participation, and network evolution.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Consensus Method -->
+            <section id="consensus-method">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2 text-indigo-600">2. Core Method: Round-Robin PoA Consensus</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">The heart of our system is a custom Proof of Authority protocol that is deterministic, fork-free, and fault-tolerant. Interact with the simulation below.</p>
+                    
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                        <div class="flex justify-center items-center space-x-2 sm:space-x-4 h-32" id="leader-ring">
+                            <div id="leader-0" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">Leader 1</div>
+                            <div id="leader-1" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">Leader 2</div>
+                            <div id="leader-2" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">Leader 3</div>
+                            <div id="leader-3" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base">Leader 4</div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p id="consensus-status" class="text-slate-600 h-6 font-medium">Leader 1's turn to create a block...</p>
+                            <div id="timeout-bar-container" class="w-full bg-slate-200 rounded-full h-2.5 mt-2 hidden">
+                              <div id="timeout-bar" class="bg-yellow-400 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-center space-x-4">
+                            <button id="fail-node-btn" class="px-5 py-2 font-medium bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors">Simulate Leader Failure</button>
+                            <button id="reset-sim-btn" class="px-5 py-2 font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg transition-colors">Reset Simulation</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supporting Algorithms -->
+            <section id="supporting-algorithms">
+                 <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center mb-2 text-indigo-600">3. Supporting Algorithms & Protocols</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">Industry-proven algorithms provide the cryptographic security and network functionality that underpin the entire system.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="feature-card p-6">
+                            <div class="flex items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-xl">✍️</div>
+                                <h3 class="ml-4 text-lg font-bold text-slate-800">Digital Signatures (ECDSA)</h3>
+                            </div>
+                            <p class="mt-4 text-slate-600">Ensures authenticity. Every transaction and block is signed, proving its origin and preventing tampering.</p>
+                        </div>
+                        <div class="feature-card p-6">
+                            <div class="flex items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-xl">🔗</div>
+                                <h3 class="ml-4 text-lg font-bold text-slate-800">Hashing (SHA-256)</h3>
+                            </div>
+                            <p class="mt-4 text-slate-600">Maintains integrity. Each block is cryptographically linked to the previous one, creating an unbreakable chain.</p>
+                        </div>
+                        <div class="feature-card p-6">
+                            <div class="flex items-center">
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-xl">📡</div>
+                                <h3 class="ml-4 text-lg font-bold text-slate-800">P2P Broadcast</h3>
+                            </div>
+                            <p class="mt-4 text-slate-600">A simple peer-to-peer protocol efficiently propagates transactions and new blocks across the entire network.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const leaderNodes = document.querySelectorAll('.leader-node');
+            const statusEl = document.getElementById('consensus-status');
+            const failBtn = document.getElementById('fail-node-btn');
+            const resetBtn = document.getElementById('reset-sim-btn');
+            const timeoutBarContainer = document.getElementById('timeout-bar-container');
+            const timeoutBar = document.getElementById('timeout-bar');
+            
+            let currentLeader = 0;
+            let consensusInterval;
+            let failedNodes = new Set();
+            let timeoutInterval;
+
+            const runConsensus = () => {
+                if (failedNodes.size === leaderNodes.length) {
+                    statusEl.textContent = "All leaders have failed! Network halted.";
+                    clearInterval(consensusInterval);
+                    return;
+                }
+                
+                let nextLeaderFound = false;
+                for(let i = 0; i < leaderNodes.length; i++) {
+                    currentLeader = (currentLeader + 1) % leaderNodes.length;
+                    if (!failedNodes.has(currentLeader)) {
+                        nextLeaderFound = true;
+                        break;
+                    }
+                }
+
+                leaderNodes.forEach((node, index) => {
+                    node.classList.remove('active');
+                    if (index === currentLeader) {
+                        node.classList.add('active');
+                        statusEl.textContent = `Leader ${index + 1}'s turn to create a block...`;
+                    }
+                });
+            };
+
+            const startInterval = () => {
+                clearInterval(consensusInterval);
+                consensusInterval = setInterval(runConsensus, 2000);
+            };
+
+            failBtn.addEventListener('click', () => {
+                if (failedNodes.has(currentLeader) || failedNodes.size === leaderNodes.length) return;
+                
+                const failingLeaderIndex = currentLeader;
+                const failingNode = leaderNodes[failingLeaderIndex];
+                
+                failedNodes.add(failingLeaderIndex);
+                failingNode.classList.add('failed');
+                failingNode.classList.remove('active');
+                statusEl.textContent = `Leader ${failingLeaderIndex + 1} failed! Initiating timeout...`;
+                
+                clearInterval(consensusInterval);
+                clearInterval(timeoutInterval);
+                
+                timeoutBarContainer.style.display = 'block';
+                let timeoutProgress = 0;
+                timeoutBar.style.width = '0%';
+
+                timeoutInterval = setInterval(() => {
+                    timeoutProgress += 10;
+                    timeoutBar.style.width = `${timeoutProgress}%`;
+                    if (timeoutProgress >= 100) {
+                        clearInterval(timeoutInterval);
+                        timeoutBarContainer.style.display = 'none';
+                        statusEl.textContent = `Timeout! Skipping failed leader ${failingLeaderIndex + 1}.`;
+                        setTimeout(() => {
+                            runConsensus();
+                            startInterval();
+                        }, 1000);
+                    }
+                }, 150);
+            });
+
+            resetBtn.addEventListener('click', () => {
+                clearInterval(consensusInterval);
+                clearInterval(timeoutInterval);
+                failedNodes.clear();
+                leaderNodes.forEach(node => {
+                    node.classList.remove('failed', 'active');
+                });
+                currentLeader = -1;
+                timeoutBarContainer.style.display = 'none';
+                runConsensus();
+                startInterval();
+            });
+
+            // Initial Start
+            leaderNodes[0].classList.add('active');
+            startInterval();
+        });
+    </script>
+</body>
+</html>
