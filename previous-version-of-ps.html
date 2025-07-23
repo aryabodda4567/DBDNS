@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Analysis: The Evolution of Decentralized DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate (base), Indigo (tech), Red (drawbacks), Green (solutions) -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive vertical timeline, titled "The Journey of Decentralized DNS." This structure guides the user chronologically through the different systems (Traditional, Namecoin, Blockstack, ConsortiumDNS), culminating in a teaser for "Our Solution." This narrative approach is highly effective for showing evolution and building a case for the final proposed solution by highlighting the shortcomings of each predecessor. -->
+    <!-- Visualization & Content Choices: 1. Timeline Stepper: A CSS-based vertical timeline guides the user. 2. Info Cards: Each system is presented on a card with key features and a "Drawback" section. 3. Architecture Diagram: For ConsortiumDNS, its three-layer architecture is visualized with HTML/CSS cards. 4. Interactive Reveal: The final "Our Solution" card directly contrasts with the ConsortiumDNS drawbacks, revealed on the last step. This visual storytelling makes the comparison clear and impactful. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .timeline-item {
+            position: relative;
+            padding-left: 2.5rem; /* 40px */
+            padding-bottom: 2.5rem; /* 40px */
+        }
+        .timeline-item:not(:last-child) {
+            border-left: 2px solid #e2e8f0; /* slate-200 */
+        }
+        .timeline-marker {
+            position: absolute;
+            left: -0.7rem; /* -11px */
+            top: 0;
+            width: 1.25rem; /* 20px */
+            height: 1.25rem; /* 20px */
+            border-radius: 9999px;
+            background-color: white;
+            border: 2px solid #e2e8f0; /* slate-200 */
+            transition: all 0.3s ease;
+        }
+        .timeline-item.active .timeline-marker {
+            border-color: #4f46e5; /* indigo-600 */
+            transform: scale(1.2);
+        }
+        .timeline-content {
+            transition: all 0.3s ease;
+        }
+        .drawback-card {
+            background-color: #fee2e2; /* red-100 */
+            border-left: 4px solid #ef4444; /* red-500 */
+            color: #b91c1c; /* red-700 */
+        }
+        .solution-card {
+            background-color: #dcfce7; /* green-100 */
+            border-left: 4px solid #22c55e; /* green-500 */
+            color: #15803d; /* green-700 */
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">The Journey of Decentralized DNS</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">An analysis of prior art, revealing the need for a truly fault-tolerant solution.</p>
+        </header>
+
+        <main id="timeline-container">
+            <!-- Timeline Item 1: Traditional DNS -->
+            <div class="timeline-item active">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h2 class="text-2xl font-bold text-slate-800">The Starting Point: Traditional DNS</h2>
+                    <div class="mt-4 bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <p class="text-slate-600">The journey begins with the current DNS system. It's hierarchical and managed by central authorities like ICANN.</p>
+                        <div class="drawback-card p-4 rounded-lg mt-4">
+                            <h4 class="font-bold">Key Drawback: Centralization</h4>
+                            <p class="text-sm">This model creates single points of failure, making it vulnerable to outages, security attacks, and censorship.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2: Namecoin -->
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h2 class="text-2xl font-bold text-slate-800">First Attempt: Namecoin</h2>
+                    <div class="mt-4 bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <p class="text-slate-600">Namecoin was the first to combine DNS with a blockchain, creating a new, independent chain with a Proof-of-Work (PoW) consensus mechanism to prevent censorship.</p>
+                        <div class="drawback-card p-4 rounded-lg mt-4">
+                            <h4 class="font-bold">Key Drawback: Poor Security</h4>
+                            <p class="text-sm">Its PoW network had insufficient computing power, making it highly vulnerable to a 51% attack, where a single entity could rewrite the DNS records.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3: Blockstack -->
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h2 class="text-2xl font-bold text-slate-800">An Improvement: Blockstack</h2>
+                    <div class="mt-4 bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <p class="text-slate-600">Blockstack learned from Namecoin's security flaws and anchored its naming system to the powerful Bitcoin blockchain, inheriting its immense security.</p>
+                        <div class="drawback-card p-4 rounded-lg mt-4">
+                            <h4 class="font-bold">Key Drawback: Low Performance</h4>
+                            <p class="text-sm">Its performance was limited by Bitcoin's 10-minute average block time and low transaction throughput, making it too slow and inefficient for a dynamic DNS service.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4: ConsortiumDNS -->
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h2 class="text-2xl font-bold text-slate-800">A Step Forward: ConsortiumDNS</h2>
+                    <div class="mt-4 bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <p class="text-slate-600 mb-6">The "ConsortiumDNS" paper proposed using a permissioned blockchain, which is better suited for organizations. It introduced a clever three-layer architecture to solve storage issues.</p>
+                        
+                        <h4 class="font-semibold text-lg text-indigo-600 mb-3">Three-Layer Architecture:</h4>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-700">1. Storage Layer:</span>
+                                <span class="text-slate-600 text-sm">Holds actual DNS data off-chain.</span>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-700">2. Blockchain Layer:</span>
+                                <span class="text-slate-600 text-sm">Stores only lightweight transaction data and pointers.</span>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                <span class="font-bold text-slate-700">3. Consensus Layer:</span>
+                                <span class="text-slate-600 text-sm">The P2P network of nodes that maintains the system.</span>
+                            </div>
+                        </div>
+
+                        <div class="drawback-card p-4 rounded-lg mt-6">
+                            <h4 class="font-bold">Key Drawback: Undefined & Inefficient Consensus</h4>
+                            <p class="text-sm">The paper explicitly states its system has low throughput and that a more efficient, fault-tolerant consensus mechanism is needed for future work. It identifies the problem but doesn't solve it.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Item 5: Our Solution -->
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <h2 class="text-2xl font-bold text-slate-800">The Next Evolution: Our Project's Solution</h2>
+                    <div class="mt-4 bg-white p-6 rounded-2xl shadow-md border border-slate-200">
+                        <p class="text-slate-600">Our project builds directly on this prior art, addressing the critical gap left by ConsortiumDNS.</p>
+                        <div class="solution-card p-4 rounded-lg mt-4">
+                            <h4 class="font-bold">Our Innovation: A Complete, Fault-Tolerant Protocol</h4>
+                            <p class="text-sm">We propose a specific, efficient, and resilient consensus algorithm—**Round-Robin Proof of Authority with a Timeout**—to solve the exact problem that previous systems identified but left unresolved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    } else {
+                        entry.target.classList.remove('active');
+                    }
+                });
+            }, {
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: 0
+            });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
+            });
+        });
+    </script>
+</body>
+</html>
