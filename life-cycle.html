@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Decentralized DNS Lifecycle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate & Sky -->
+    <!-- Application Structure Plan: The SPA is designed as a linear, interactive storyboard. Users navigate through four distinct phases using "Next" and "Previous" buttons. This task-oriented flow guides the user through the complex lifecycle process step-by-step, making it easier to understand than a static document. Each phase visually represents the network state, with nodes appearing and the blockchain chart updating dynamically. This structure was chosen for its educational clarity, turning a dense technical document into an engaging learning experience. -->
+    <!-- Visualization & Content Choices: Report Info: The four phases of the DNS lifecycle. Goal: Explain a complex, sequential process. Viz/Presentation Method: A multi-step interactive diagram built with HTML/CSS and a dynamic bar chart (Chart.js) to show blockchain growth. Interaction: Users click buttons to advance the simulation. Text panels explain each step. Justification: This interactive, visual approach is more engaging and effective for teaching a process than static text. The bar chart provides immediate visual feedback on the consequences of actions like block creation. Library/Method: Vanilla JS for state management and DOM manipulation, Chart.js for data visualization. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .phase-content {
+            display: none;
+        }
+        .phase-content.active {
+            display: block;
+        }
+        .node {
+            transition: all 0.5s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .node-line {
+            position: absolute;
+            background-color: #cbd5e1; /* slate-300 */
+            transform-origin: left center;
+            transition: all 0.5s ease-in-out;
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Decentralized DNS Lifecycle</h1>
+            <p class="mt-2 text-lg text-slate-600">An interactive walkthrough of the system's operational flow.</p>
+        </header>
+
+        <main class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+            <div id="interactive-area" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <div id="visualization-pane" class="bg-slate-100 rounded-xl p-4 sm:p-6 flex flex-col justify-center items-center min-h-[400px] lg:min-h-[500px]">
+                    <div id="network-diagram" class="relative w-full h-64 sm:h-80 mb-6">
+                        <!-- Nodes will be injected here by JS -->
+                    </div>
+                    <div class="w-full">
+                        <h3 class="text-lg font-semibold text-center mb-2 text-slate-700">Blockchain State</h3>
+                        <div class="chart-container">
+                            <canvas id="blockchainChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="explanation-pane" class="flex flex-col">
+                    <div id="phase-title" class="text-2xl font-bold text-sky-600 mb-4"></div>
+                    <div id="step-indicators" class="flex space-x-2 mb-6">
+                        <!-- Step indicators will be injected here -->
+                    </div>
+                    <div id="phase-container" class="flex-grow">
+                        <!-- Phase 1: Network Initialization -->
+                        <div id="phase-1" class="phase-content">
+                            <div class="step" data-step="0">
+                                <h3 class="text-xl font-semibold mb-2">1. Deploying the Genesis Node</h3>
+                                <p class="text-slate-600">The process begins when an administrator starts the first Leader Node (A). Since no blockchain exists, it creates the **Genesis Block (Block #0)**. This special block contains the public keys of all initial leaders, establishing the foundation of the network's trust.</p>
+                            </div>
+                            <div class="step" data-step="1" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">2. Adding Other Leader Nodes</h3>
+                                <p class="text-slate-600">Next, other leaders (B and C) are brought online. They connect to the first node, request its blockchain, and synchronize by copying the Genesis Block. The network now consists of three synchronized leaders, ready to validate transactions.</p>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2: Registering a Domain -->
+                        <div id="phase-2" class="phase-content">
+                            <div class="step" data-step="0" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">1. User Initiates Request</h3>
+                                <p class="text-slate-600">A user wants to register `project-server.lan`. They send a request to any node on the network (e.g., a new Normal Node D). The request is signed with the user's private key to prove ownership.</p>
+                            </div>
+                             <div class="step" data-step="1" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">2. Transaction Creation and Broadcast</h3>
+                                <p class="text-slate-600">The receiving node creates a transaction, validates it locally, and adds it to a "Pending Transactions" pool. It then broadcasts this new transaction to all its peers across the P2P network.</p>
+                            </div>
+                             <div class="step" data-step="2" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">3. Consensus and Block Creation</h3>
+                                <p class="text-slate-600">The current leader (e.g., Leader B) pulls the transaction from the pending pool. It validates the domain isn't already taken, creates a new block, and adds the transaction to it. This new block is then signed by the leader.</p>
+                            </div>
+                             <div class="step" data-step="3" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">4. Block Propagation and Confirmation</h3>
+                                <p class="text-slate-600">Leader B broadcasts the new block. All other nodes receive it, verify its signature and contents, and append it to their local chain. The domain is now permanently registered, and the consensus turn moves to the next leader.</p>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3: Resolving a Domain -->
+                        <div id="phase-3" class="phase-content">
+                             <div class="step" data-step="0" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">1. User Initiates Query</h3>
+                                <p class="text-slate-600">A user needs the IP address for `project-server.lan`. They send a simple `GET` request to the API of any nearby node (e.g., Leader A). This is a read-only operation.</p>
+                            </div>
+                             <div class="step" data-step="1" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">2. Local Lookup and Response</h3>
+                                <p class="text-slate-600">The node receives the query and scans its local copy of the blockchain—no network communication is needed. It finds the most recent registration for the domain and instantly returns the corresponding IP address. This process is extremely fast and efficient.</p>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4: Updating a Domain -->
+                        <div id="phase-4" class="phase-content">
+                             <div class="step" data-step="0" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">1. Owner Initiates Update</h3>
+                                <p class="text-slate-600">The original owner wants to change the IP address for `project-server.lan`. They create a new transaction with the updated IP. Crucially, they sign this transaction with the **same private key** used for the initial registration.</p>
+                            </div>
+                             <div class="step" data-step="1" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">2. Transaction and Block Creation</h3>
+                                <p class="text-slate-600">The update process follows the same lifecycle as a new registration. The transaction is broadcast, validated by the active leader, and included in a new block (e.g., Block #12).</p>
+                            </div>
+                             <div class="step" data-step="2" style="display:none;">
+                                <h3 class="text-xl font-semibold mb-2">3. Resolution After Update</h3>
+                                <p class="text-slate-600">When anyone queries for the domain now, the lookup process scans the chain backwards and finds the newest record in Block #12. The system returns the updated IP address, effectively ignoring the older record. The signature ensures only the true owner can perform an update.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-6 flex justify-between items-center">
+                        <button id="prev-btn" class="bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Previous</button>
+                        <div id="step-counter" class="text-sm text-slate-500"></div>
+                        <button id="next-btn" class="bg-sky-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors disabled:opacity-50">Next Step</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phases = [
+                { id: 'phase-1', title: 'Phase 1: Network Initialization', steps: 2 },
+                { id: 'phase-2', title: 'Phase 2: A User Registers a New Domain', steps: 4 },
+                { id: 'phase-3', title: 'Phase 3: A User Resolves a Domain', steps: 2 },
+                { id: 'phase-4', title: 'Phase 4: The Owner Updates a DNS Record', steps: 3 },
+            ];
+
+            let currentPhaseIndex = 0;
+            let currentStepIndex = 0;
+
+            const phaseTitleEl = document.getElementById('phase-title');
+            const phaseContainer = document.getElementById('phase-container');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const stepIndicatorsContainer = document.getElementById('step-indicators');
+            const stepCounterEl = document.getElementById('step-counter');
+            const networkDiagram = document.getElementById('network-diagram');
+
+            const chartCtx = document.getElementById('blockchainChart').getContext('2d');
+            let blockchainChart;
+
+            const chartData = {
+                labels: [],
+                datasets: [{
+                    label: 'Blocks on Chain',
+                    data: [],
+                    backgroundColor: 'rgba(56, 189, 248, 0.6)', // sky-400
+                    borderColor: 'rgba(14, 165, 233, 1)', // sky-500
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            };
+
+            function initializeChart() {
+                if (blockchainChart) {
+                    blockchainChart.destroy();
+                }
+                blockchainChart = new Chart(chartCtx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    color: '#475569' // slate-600
+                                },
+                                grid: {
+                                    color: '#e2e8f0' // slate-200
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: '#475569' // slate-600
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            function updateChart(label, value) {
+                chartData.labels.push(label);
+                chartData.datasets[0].data.push(value);
+                blockchainChart.update();
+            }
+
+            function resetChart() {
+                chartData.labels = [];
+                chartData.datasets[0].data = [];
+                initializeChart();
+            }
+            
+            function updateUI() {
+                const currentPhase = phases[currentPhaseIndex];
+
+                phaseTitleEl.textContent = currentPhase.title;
+
+                document.querySelectorAll('.phase-content').forEach(p => p.classList.remove('active'));
+                const activePhaseEl = document.getElementById(currentPhase.id);
+                activePhaseEl.classList.add('active');
+
+                activePhaseEl.querySelectorAll('.step').forEach((step, i) => {
+                    step.style.display = i === currentStepIndex ? 'block' : 'none';
+                });
+
+                stepIndicatorsContainer.innerHTML = '';
+                for (let i = 0; i < currentPhase.steps; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.className = `step-indicator w-full h-2 rounded-full ${i <= currentStepIndex ? 'bg-sky-500' : 'bg-slate-200'}`;
+                    stepIndicatorsContainer.appendChild(indicator);
+                }
+                
+                stepCounterEl.textContent = `Step ${currentStepIndex + 1} of ${currentPhase.steps}`;
+
+                prevBtn.disabled = currentPhaseIndex === 0 && currentStepIndex === 0;
+                nextBtn.textContent = (currentPhaseIndex === phases.length - 1 && currentStepIndex === currentPhase.steps - 1) ? 'Restart' : 'Next Step';
+
+                updateVisualization();
+            }
+            
+            function updateVisualization() {
+                networkDiagram.innerHTML = ''; 
+                
+                const nodePositions = {
+                    'A': { top: '10%', left: '50%', transform: 'translateX(-50%)' },
+                    'B': { top: '70%', left: '20%', transform: 'translateX(-50%)' },
+                    'C': { top: '70%', left: '80%', transform: 'translateX(-50%)' },
+                    'D': { top: '40%', left: '5%', transform: 'none' },
+                };
+
+                const createNode = (id, label, isLeader) => {
+                    const node = document.createElement('div');
+                    node.id = `node-${id}`;
+                    node.className = `node absolute flex flex-col items-center justify-center w-20 h-20 rounded-full text-white font-bold text-lg ${isLeader ? 'bg-slate-700' : 'bg-sky-500'}`;
+                    node.style.top = nodePositions[id].top;
+                    node.style.left = nodePositions[id].left;
+                    node.style.transform = nodePositions[id].transform;
+                    node.innerHTML = `<span>${label}</span><span class="text-xs font-normal">${isLeader ? 'Leader' : 'Normal'}</span>`;
+                    networkDiagram.appendChild(node);
+                };
+                
+                const createLine = (fromId, toId) => {
+                    const fromNode = document.getElementById(`node-${fromId}`);
+                    const toNode = document.getElementById(`node-${toId}`);
+                    if (!fromNode || !toNode) return;
+
+                    const fromRect = fromNode.getBoundingClientRect();
+                    const toRect = toNode.getBoundingClientRect();
+                    const containerRect = networkDiagram.getBoundingClientRect();
+
+                    const x1 = fromRect.left + fromRect.width / 2 - containerRect.left;
+                    const y1 = fromRect.top + fromRect.height / 2 - containerRect.top;
+                    const x2 = toRect.left + toRect.width / 2 - containerRect.left;
+                    const y2 = toRect.top + toRect.height / 2 - containerRect.top;
+
+                    const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+                    const line = document.createElement('div');
+                    line.className = 'node-line h-0.5';
+                    line.style.width = `${length}px`;
+                    line.style.top = `${y1}px`;
+                    line.style.left = `${x1}px`;
+                    line.style.transform = `rotate(${angle}deg)`;
+                    networkDiagram.appendChild(line);
+                };
+                
+                const setActive = (id, color = 'bg-green-500') => {
+                    const node = document.getElementById(`node-${id}`);
+                    if (node) {
+                        node.classList.remove('bg-slate-700', 'bg-sky-500');
+                        node.classList.add(color);
+                    }
+                };
+
+                if (currentPhaseIndex === 0) { // Initialization
+                    if (currentStepIndex >= 0) {
+                        createNode('A', 'A', true);
+                        if(currentStepIndex === 0) {
+                            setActive('A');
+                            if(chartData.labels.length === 0) updateChart('Genesis', 1);
+                        }
+                    }
+                    if (currentStepIndex === 1) {
+                        createNode('B', 'B', true);
+                        createNode('C', 'C', true);
+                        createLine('A', 'B');
+                        createLine('A', 'C');
+                        setActive('A'); setActive('B'); setActive('C');
+                    }
+                } else if (currentPhaseIndex >= 1) { // All nodes exist
+                    createNode('A', 'A', true);
+                    createNode('B', 'B', true);
+                    createNode('C', 'C', true);
+                    createNode('D', 'D', false);
+                    createLine('A','B'); createLine('B','C'); createLine('C','A');
+                    createLine('D','A'); createLine('D','B'); createLine('D','C');
+                }
+
+                if (currentPhaseIndex === 1) { // Registration
+                    if (currentStepIndex === 0) setActive('D', 'bg-yellow-500');
+                    if (currentStepIndex === 1) { setActive('D'); createLine('D','B'); }
+                    if (currentStepIndex === 2) setActive('B', 'bg-yellow-500');
+                    if (currentStepIndex === 3) {
+                        setActive('B');
+                        if(chartData.labels.length === 1) updateChart('Block #5', 2);
+                    }
+                }
+                
+                if (currentPhaseIndex === 2) { // Resolution
+                     if (currentStepIndex === 0) setActive('A', 'bg-yellow-500');
+                     if (currentStepIndex === 1) setActive('A');
+                }
+
+                if (currentPhaseIndex === 3) { // Update
+                    if (currentStepIndex === 0) { /* User action, no node highlight */ }
+                    if (currentStepIndex === 1) {
+                        setActive('C', 'bg-yellow-500');
+                        if(chartData.labels.length === 2) updateChart('Block #12', 3);
+                    }
+                    if (currentStepIndex === 2) setActive('C');
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                const currentPhase = phases[currentPhaseIndex];
+                if (currentPhaseIndex === phases.length - 1 && currentStepIndex === currentPhase.steps - 1) {
+                    currentPhaseIndex = 0;
+                    currentStepIndex = 0;
+                    resetChart();
+                } else if (currentStepIndex < currentPhase.steps - 1) {
+                    currentStepIndex++;
+                } else {
+                    currentPhaseIndex++;
+                    currentStepIndex = 0;
+                }
+                updateUI();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStepIndex > 0) {
+                    currentStepIndex--;
+                } else if (currentPhaseIndex > 0) {
+                    currentPhaseIndex--;
+                    currentStepIndex = phases[currentPhaseIndex].steps - 1;
+                }
+                updateUI();
+            });
+
+            // Initial setup
+            initializeChart();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
