@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Documentation: Decentralized DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .nav-link.active {
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #4338ca; /* indigo-700 */
+            font-weight: 600;
+        }
+        #content-area h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800;
+            color: #1e293b; /* slate-800 */
+            margin-bottom: 1rem;
+        }
+        #content-area h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700;
+            color: #4f46e5; /* indigo-600 */
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+        #content-area h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700;
+            color: #334155; /* slate-700 */
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        #content-area h4 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600;
+            color: #475569; /* slate-600 */
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+        #content-area p {
+            color: #475569; /* slate-600 */
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        #content-area ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            color: #475569; /* slate-600 */
+            margin-bottom: 1rem;
+        }
+        #content-area li {
+            margin-bottom: 0.5rem;
+        }
+        #content-area strong {
+            color: #1e293b; /* slate-800 */
+        }
+        #content-area .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 5rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="max-w-screen-xl mx-auto">
+        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+            <aside class="lg:col-span-3 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto p-6 bg-white border-r border-slate-200">
+                <header class="mb-8">
+                    <h1 class="text-2xl font-bold text-slate-900">Decentralized DNS</h1>
+                    <p class="text-sm text-slate-500">Project Documentation</p>
+                </header>
+                <nav>
+                    <ul id="nav-menu" class="space-y-2">
+                        <!-- Navigation links will be injected here -->
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="lg:col-span-9">
+                <div id="content-area" class="p-6 sm:p-8 lg:p-12 bg-white m-0 lg:m-8 rounded-2xl shadow-lg min-h-screen">
+                    <!-- Content will be loaded here -->
+                    <div class="loader"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navMenu = document.getElementById('nav-menu');
+            const contentArea = document.getElementById('content-area');
+            const repoBaseUrl = 'https://raw.githubusercontent.com/aryabodda4567/DBDNS/main/';
+
+            const pages = [
+                { file: 'project-overview.html', title: 'Project Overview' },
+                { file: 'problem-statement.html', title: 'Problem Statement' },
+                { file: 'previous-version-of-ps.html', title: 'Analysis of Prior Art' },
+                { file: 'further-enhancement.html', title: 'Our Solution\'s Uniqueness' },
+                { file: 'approaches-methods-algos.html', title: 'Methods & Algorithms' },
+                { file: 'implementation.html', title: 'Implementation Plan' },
+                { file: 'life-cycle.html', title: 'System Lifecycle' },
+                { file: 'requirements.html', title: 'System Requirements' },
+                { file: 'applications.html', title: 'Real-World Impact' },
+                { file: 'abstract.html', title: 'Conclusion' }
+            ];
+
+            const fetchPageContent = async (fileName) => {
+                contentArea.innerHTML = '<div class="loader"></div>';
+                try {
+                    const response = await fetch(repoBaseUrl + fileName);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const bodyContent = doc.body.innerHTML;
+                    contentArea.innerHTML = bodyContent;
+                } catch (error) {
+                    console.error('Error fetching page:', error);
+                    contentArea.innerHTML = `<p class="text-red-500 font-bold">Error: Could not load content for ${fileName}. Please check the file path and network connection.</p>`;
+                }
+            };
+
+            pages.forEach((page, index) => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${page.file}`;
+                a.textContent = page.title;
+                a.className = 'nav-link block w-full text-left px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors';
+                a.dataset.file = page.file;
+
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    a.classList.add('active');
+                    fetchPageContent(page.file);
+                    // Update URL hash without jumping
+                    history.pushState(null, '', `#${page.file}`);
+                });
+
+                li.appendChild(a);
+                navMenu.appendChild(li);
+            });
+
+            const loadInitialPage = () => {
+                const hash = window.location.hash.substring(1);
+                const pageToLoad = pages.find(p => p.file === hash) || pages[0];
+                const linkToActivate = document.querySelector(`.nav-link[data-file="${pageToLoad.file}"]`);
+                
+                if (linkToActivate) {
+                    linkToActivate.classList.add('active');
+                    fetchPageContent(pageToLoad.file);
+                }
+            };
+            
+            loadInitialPage();
+        });
+    </script>
+</body>
+</html>
