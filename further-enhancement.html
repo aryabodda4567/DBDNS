@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Slate (base), Indigo (innovation), Green (success), Red (failure) -->
-    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard with three distinct modules, one for each unique project feature (Consensus, Governance, Architecture). This modular, card-based layout allows users to explore each innovation independently and at their own pace. This structure is superior to a linear document for showcasing features, as it encourages focused exploration and direct interaction with the core concepts. -->
-    <!-- Visualization & Content Choices: 1. Consensus: An interactive simulation of the Round-Robin PoA with a "Simulate Failure" button to demonstrate the timeout mechanism. 2. Governance: An interactive voting panel to explain the >2/3 supermajority rule. 3. Architecture: A clear, side-by-side CSS diagram comparing the project's simple on-chain model to the complex 3-layer model of ConsortiumDNS. These visual and interactive choices are designed to make abstract technical concepts tangible and memorable. -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive 'Innovation Showcase' using a 2x2 grid. This modular, card-based layout allows users to explore each of the four unique project features independently. This structure is superior to a linear document for showcasing features, as it encourages focused exploration and direct interaction with the core concepts, making them more memorable. -->
+    <!-- Visualization & Content Choices: 1. Consensus: An interactive simulation of the Round-Robin PoA with a button to demonstrate the timeout mechanism. 2. Governance: An interactive voting panel to explain the >2/3 supermajority rule. 3. Architecture: A side-by-side CSS diagram comparing the project's simple on-chain model to the complex 3-layer model. 4. Scalability: A visual diagram explaining the concept of checkpointing, pruning, and archival nodes. These choices turn abstract technical concepts into tangible demonstrations. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -20,11 +20,14 @@
             border-radius: 1rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             border: 1px solid #e2e8f0; /* slate-200 */
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-content {
+            flex-grow: 1;
         }
         .leader-node {
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         .leader-node.active {
             transform: scale(1.15);
@@ -38,23 +41,31 @@
             opacity: 0.6;
             color: white;
         }
-        .progress-bar-bg {
-            background-color: #e5e7eb; /* gray-200 */
-        }
         .progress-bar {
             transition: width 0.2s linear;
-        }
-        .vote-btn {
-            transition: all 0.2s ease;
         }
         .vote-btn.approved {
             background-color: #22c55e; /* green-500 */
             color: white;
             transform: scale(1.05);
         }
-        .vote-btn.pending {
-            background-color: #f3f4f6; /* gray-100 */
-            color: #374151; /* gray-700 */
+        .blockchain {
+            display: flex;
+            gap: 4px;
+        }
+        .block {
+            width: 20px;
+            height: 30px;
+            border: 2px solid #94a3b8;
+            transition: all 0.5s ease;
+        }
+        .block.pruned {
+            opacity: 0.2;
+            border-style: dashed;
+        }
+        .block.checkpoint {
+            background-color: #facc15; /* yellow-400 */
+            border-color: #eab308;
         }
     </style>
 </head>
@@ -66,39 +77,39 @@
             <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">An interactive showcase of the key features that make our decentralized DNS solution practical, resilient, and complete.</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <!-- Feature 1: Consensus Protocol -->
-            <div class="feature-card xl:col-span-2">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-indigo-600">1. A Complete and Fault-Tolerant Consensus Protocol</h2>
-                    <p class="mt-2 text-slate-600">Our core innovation is the **Round-Robin Proof of Authority (PoA) with a Timeout**. This makes our network efficient, fork-free, and guarantees it stays online even if leaders fail. Press the "Simulate Failure" button to test its resilience.</p>
+            <div class="feature-card">
+                <div class="p-6 card-content">
+                    <h2 class="text-2xl font-bold text-indigo-600">1. Fault-Tolerant Consensus</h2>
+                    <p class="mt-2 text-slate-600">Our **Round-Robin PoA with a Timeout** is efficient and guarantees the network stays online even if leaders fail. Press "Simulate Failure" to test its resilience.</p>
                 </div>
                 <div class="bg-slate-50 p-6 border-t border-slate-200">
-                    <div class="flex justify-center items-center space-x-4 h-32" id="leader-ring">
-                        <div id="leader-0" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L1</div>
-                        <div id="leader-1" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L2</div>
-                        <div id="leader-2" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L3</div>
-                        <div id="leader-3" class="leader-node w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L4</div>
+                    <div class="flex justify-center items-center space-x-4 h-24" id="leader-ring">
+                        <div id="leader-0" class="leader-node w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L1</div>
+                        <div id="leader-1" class="leader-node w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L2</div>
+                        <div id="leader-2" class="leader-node w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L3</div>
+                        <div id="leader-3" class="leader-node w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-white font-bold">L4</div>
                     </div>
                     <div class="mt-4 text-center">
                         <p id="consensus-status" class="text-slate-600 h-6 font-medium">Leader L1's turn to create a block...</p>
-                        <div id="timeout-bar-container" class="w-full progress-bar-bg rounded-full h-2.5 mt-2 hidden">
+                        <div id="timeout-bar-container" class="w-full bg-slate-200 rounded-full h-2.5 mt-2 hidden">
                           <div id="timeout-bar" class="bg-yellow-400 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
                         </div>
                     </div>
                     <div class="mt-4 flex justify-center space-x-4">
-                        <button id="fail-node-btn" class="px-5 py-2 font-medium bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors">Simulate Leader Failure</button>
-                        <button id="reset-sim-btn" class="px-5 py-2 font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">Reset Simulation</button>
+                        <button id="fail-node-btn" class="px-5 py-2 font-medium bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors">Simulate Failure</button>
+                        <button id="reset-sim-btn" class="px-5 py-2 font-medium bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg transition-colors">Reset</button>
                     </div>
                 </div>
             </div>
 
             <!-- Feature 2: Governance -->
             <div class="feature-card">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-indigo-600">2. Defined On-Chain Governance</h2>
-                    <p class="mt-2 text-slate-600">A decentralized system needs a clear way to evolve. We use a **>2/3 supermajority vote** to add new leaders, preventing any single node from blocking progress. Cast votes below to see how it works.</p>
+                <div class="p-6 card-content">
+                    <h2 class="text-2xl font-bold text-indigo-600">2. On-Chain Governance</h2>
+                    <p class="mt-2 text-slate-600">A decentralized system needs a clear way to evolve. We use a **>2/3 supermajority vote** to add new leaders. Cast votes below to see how it works.</p>
                 </div>
                  <div class="bg-slate-50 p-6 border-t border-slate-200">
                     <h3 class="font-semibold text-center">Proposal: Promote Node "L7" to Leader</h3>
@@ -114,33 +125,44 @@
             </div>
 
              <!-- Feature 3: Architecture -->
-            <div class="feature-card xl:col-span-3">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold text-indigo-600">3. Architectural Simplicity & Auditability</h2>
-                    <p class="mt-2 text-slate-600">Unlike complex multi-layer solutions, we use a single on-chain architecture. This reduces complexity and makes the entire system easier to manage, secure, and audit—a critical advantage for enterprise use.</p>
+            <div class="feature-card">
+                <div class="p-6 card-content">
+                    <h2 class="text-2xl font-bold text-indigo-600">3. Architectural Simplicity</h2>
+                    <p class="mt-2 text-slate-600">Unlike complex multi-layer solutions, we use a single on-chain architecture. This reduces complexity and makes the entire system easier to manage, secure, and audit.</p>
                 </div>
-                <div class="bg-slate-50 p-6 border-t border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="bg-slate-50 p-6 border-t border-slate-200 grid grid-cols-2 gap-6 items-center">
                     <div class="text-center">
-                        <h3 class="font-bold text-lg text-slate-800">Our Solution: Unified Ledger</h3>
-                        <div class="mt-4 p-6 bg-green-100 border-2 border-dashed border-green-300 rounded-lg h-32 flex items-center justify-center">
-                            <p class="font-semibold text-green-800">Blockchain (Data + Operations)</p>
+                        <h3 class="font-bold text-lg text-slate-800">Our Solution</h3>
+                        <div class="mt-4 p-4 bg-green-100 border-2 border-dashed border-green-300 rounded-lg h-24 flex items-center justify-center">
+                            <p class="font-semibold text-green-800">Unified Ledger</p>
                         </div>
-                        <p class="text-sm text-slate-500 mt-2">Simple, self-contained, and fully auditable.</p>
                     </div>
                     <div class="text-center">
-                        <h3 class="font-bold text-lg text-slate-800">ConsortiumDNS: 3-Layer Model</h3>
-                        <div class="mt-4 space-y-2">
-                             <div class="p-2 bg-red-100 border-2 border-dashed border-red-300 rounded-lg">
-                                <p class="font-semibold text-red-800 text-sm">Storage Layer</p>
-                            </div>
-                             <div class="p-2 bg-red-100 border-2 border-dashed border-red-300 rounded-lg">
-                                <p class="font-semibold text-red-800 text-sm">Blockchain Layer</p>
-                            </div>
-                             <div class="p-2 bg-red-100 border-2 border-dashed border-red-300 rounded-lg">
-                                <p class="font-semibold text-red-800 text-sm">Consensus Layer</p>
-                            </div>
+                        <h3 class="font-bold text-lg text-slate-800">ConsortiumDNS</h3>
+                        <div class="mt-4 space-y-1">
+                             <div class="p-1 text-xs bg-red-100 border-2 border-dashed border-red-300 rounded-lg font-semibold text-red-800">Storage Layer</div>
+                             <div class="p-1 text-xs bg-red-100 border-2 border-dashed border-red-300 rounded-lg font-semibold text-red-800">Blockchain Layer</div>
+                             <div class="p-1 text-xs bg-red-100 border-2 border-dashed border-red-300 rounded-lg font-semibold text-red-800">Consensus Layer</div>
                         </div>
-                        <p class="text-sm text-slate-500 mt-2">Complex, with external dependencies.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4: Scalability -->
+            <div class="feature-card">
+                <div class="p-6 card-content">
+                    <h2 class="text-2xl font-bold text-indigo-600">4. Advanced Scalability</h2>
+                    <p class="mt-2 text-slate-600">We use **State Pruning with Checkpointing** to manage long-term storage growth, keeping nodes lightweight and fast while retaining full auditability via a designated **Archival Node**.</p>
+                </div>
+                <div class="bg-slate-50 p-6 border-t border-slate-200">
+                    <div class="mb-4">
+                        <div class="blockchain" id="blockchain-vis">
+                            <!-- Blocks injected by JS -->
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-slate-600 h-6 font-medium" id="pruning-status">Full chain history is stored.</p>
+                        <button id="prune-btn" class="mt-4 px-5 py-2 font-medium bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg transition-colors">Prune History</button>
                     </div>
                 </div>
             </div>
@@ -157,7 +179,6 @@
             const resetBtn = document.getElementById('reset-sim-btn');
             const timeoutBarContainer = document.getElementById('timeout-bar-container');
             const timeoutBar = document.getElementById('timeout-bar');
-            
             let currentLeader = 0;
             let consensusInterval;
             let failedNodes = new Set();
@@ -165,11 +186,10 @@
 
             const runConsensus = () => {
                 if (failedNodes.size === leaderNodes.length) {
-                    statusEl.textContent = "All leaders have failed! Network halted.";
+                    statusEl.textContent = "All leaders failed! Network halted.";
                     clearInterval(consensusInterval);
                     return;
                 }
-                
                 let nextLeaderFound = false;
                 for(let i = 0; i < leaderNodes.length; i++) {
                     currentLeader = (currentLeader + 1) % leaderNodes.length;
@@ -178,39 +198,27 @@
                         break;
                     }
                 }
-
                 leaderNodes.forEach((node, index) => {
-                    node.classList.remove('active');
-                    if (index === currentLeader) {
-                        node.classList.add('active');
-                        statusEl.textContent = `Leader L${index + 1}'s turn to create a block...`;
-                    }
+                    node.classList.toggle('active', index === currentLeader);
+                    statusEl.textContent = `Leader L${currentLeader + 1}'s turn to create a block...`;
                 });
             };
-
             const startInterval = () => {
                 clearInterval(consensusInterval);
                 consensusInterval = setInterval(runConsensus, 2000);
             };
-
             failBtn.addEventListener('click', () => {
                 if (failedNodes.has(currentLeader) || failedNodes.size === leaderNodes.length) return;
-                
                 const failingLeaderIndex = currentLeader;
-                const failingNode = leaderNodes[failingLeaderIndex];
-                
                 failedNodes.add(failingLeaderIndex);
-                failingNode.classList.add('failed');
-                failingNode.classList.remove('active');
+                leaderNodes[failingLeaderIndex].classList.add('failed');
+                leaderNodes[failingLeaderIndex].classList.remove('active');
                 statusEl.textContent = `Leader L${failingLeaderIndex + 1} failed! Initiating timeout...`;
-                
                 clearInterval(consensusInterval);
                 clearInterval(timeoutInterval);
-                
                 timeoutBarContainer.style.display = 'block';
                 let timeoutProgress = 0;
                 timeoutBar.style.width = '0%';
-
                 timeoutInterval = setInterval(() => {
                     timeoutProgress += 10;
                     timeoutBar.style.width = `${timeoutProgress}%`;
@@ -218,28 +226,20 @@
                         clearInterval(timeoutInterval);
                         timeoutBarContainer.style.display = 'none';
                         statusEl.textContent = `Timeout! Skipping failed leader L${failingLeaderIndex + 1}.`;
-                        setTimeout(() => {
-                            runConsensus();
-                            startInterval();
-                        }, 1000);
+                        setTimeout(() => { runConsensus(); startInterval(); }, 1000);
                     }
                 }, 150);
             });
-
             resetBtn.addEventListener('click', () => {
                 clearInterval(consensusInterval);
                 clearInterval(timeoutInterval);
                 failedNodes.clear();
-                leaderNodes.forEach(node => {
-                    node.classList.remove('failed', 'active');
-                    node.classList.add('bg-slate-700');
-                });
+                leaderNodes.forEach(node => node.classList.remove('failed', 'active'));
                 currentLeader = -1;
                 timeoutBarContainer.style.display = 'none';
                 runConsensus();
                 startInterval();
             });
-
             startInterval();
 
             // --- Feature 2: Governance Simulation ---
@@ -250,7 +250,6 @@
             const requiredVotes = 4;
             let approvedVotes = 0;
             let votersState = Array(totalVoters).fill(false);
-
             const updateVoteUI = () => {
                 voteStatusEl.textContent = `Votes: ${approvedVotes} / ${totalVoters}`;
                 if (approvedVotes >= requiredVotes) {
@@ -260,33 +259,68 @@
                     proposalStatusEl.innerHTML = `&nbsp;`;
                 }
             };
-            
             const createVoters = () => {
                 voterGrid.innerHTML = '';
                 for (let i = 0; i < totalVoters; i++) {
                     const btn = document.createElement('button');
-                    btn.className = 'vote-btn pending p-3 rounded-lg font-semibold';
+                    btn.className = 'vote-btn p-3 rounded-lg font-semibold bg-slate-200 text-slate-700';
                     btn.textContent = `L${i + 1}`;
                     btn.addEventListener('click', () => {
-                        if (approvedVotes < requiredVotes) {
+                        if (approvedVotes < requiredVotes || votersState[i]) {
                            votersState[i] = !votersState[i];
-                           if (votersState[i]) {
-                               approvedVotes++;
-                               btn.classList.add('approved');
-                               btn.classList.remove('pending');
-                           } else {
-                               approvedVotes--;
-                               btn.classList.remove('approved');
-                               btn.classList.add('pending');
-                           }
+                           approvedVotes += votersState[i] ? 1 : -1;
+                           btn.classList.toggle('approved', votersState[i]);
+                           btn.classList.toggle('bg-slate-200', !votersState[i]);
+                           btn.classList.toggle('text-slate-700', !votersState[i]);
                            updateVoteUI();
                         }
                     });
                     voterGrid.appendChild(btn);
                 }
             };
-            
             createVoters();
+
+            // --- Feature 4: Scalability Simulation ---
+            const blockchainVis = document.getElementById('blockchain-vis');
+            const pruneBtn = document.getElementById('prune-btn');
+            const pruningStatus = document.getElementById('pruning-status');
+            const totalBlocks = 12;
+            const checkpointIndex = 7;
+            const createBlockchain = () => {
+                blockchainVis.innerHTML = '';
+                for (let i = 0; i < totalBlocks; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'block bg-slate-200';
+                    if (i === checkpointIndex) {
+                        block.classList.add('checkpoint');
+                        block.title = 'Checkpoint';
+                    }
+                    if (i === totalBlocks -1) {
+                        block.classList.add('bg-indigo-300');
+                        block.textContent = 'A';
+                        block.classList.add('flex', 'items-center', 'justify-center', 'text-indigo-700', 'font-bold');
+                        block.title = 'Archival Node (Keeps Full History)';
+                    }
+                    blockchainVis.appendChild(block);
+                }
+            };
+            pruneBtn.addEventListener('click', () => {
+                const blocks = blockchainVis.querySelectorAll('.block');
+                const isPruned = blocks[0].classList.contains('pruned');
+                blocks.forEach((block, i) => {
+                    if (i < checkpointIndex && i !== totalBlocks -1) {
+                         block.classList.toggle('pruned', !isPruned);
+                    }
+                });
+                if(!isPruned) {
+                    pruningStatus.textContent = 'History pruned on normal nodes.';
+                    pruneBtn.textContent = 'Restore History';
+                } else {
+                    pruningStatus.textContent = 'Full chain history is stored.';
+                    pruneBtn.textContent = 'Prune History';
+                }
+            });
+            createBlockchain();
         });
     </script>
 </body>
