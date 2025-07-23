@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard: Real-World Impact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate (base), Indigo (headers), various for icons -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive 'Impact Dashboard.' A responsive 2x2 grid presents the four key impact areas as visually distinct cards. This modular structure allows users to quickly grasp the breadth of applications and then dive deeper into specific use cases by clicking a 'Learn More' button, which smoothly reveals detailed information. This is more engaging and less overwhelming than a long, scrolling text document. -->
+    <!-- Visualization & Content Choices: Report Info: Four real-world use cases. Goal: Explain the project's practical benefits. Viz/Presentation Method: Interactive cards with icons, titles, and summaries. Interaction: A 'Learn More' button on each card toggles the visibility of detailed bullet points with a smooth animation. Justification: This 'progressive disclosure' pattern keeps the initial UI clean and allows users to control the amount of information they see, preventing cognitive overload and encouraging exploration. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .impact-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .impact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .details-content.expanded {
+            max-height: 500px; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12 sm:my-16">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Real-World Impact Dashboard</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Explore the tangible benefits our decentralized DNS system provides across various sectors and use cases.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Card 1: Enterprise Networks -->
+            <div class="impact-card">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <span class="text-4xl">🛡️</span>
+                        <h2 class="ml-4 text-2xl font-bold text-indigo-600">Enterprise Networks</h2>
+                    </div>
+                    <p class="mt-4 text-slate-600">For modern corporations, network security and data control are paramount. Our system provides a powerful tool to enhance both within a corporate LAN or WAN.</p>
+                </div>
+                <div class="details-content">
+                    <div class="px-6 pb-6">
+                        <ul class="space-y-3 text-slate-600 list-disc list-inside">
+                            <li><strong>Internal Infrastructure Security:</strong> Creates a tamper-proof naming system for critical internal services, eliminating threats like internal DNS cache poisoning and providing a fully auditable record of all changes.</li>
+                            <li><strong>Complete Operational Sovereignty:</strong> Allows companies to manage their own private domains (e.g., `.mycorp`) without reliance on external bodies like ICANN, protecting them from global outages and external policy changes.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 border-t border-slate-200 pt-4">
+                    <button class="toggle-details-btn font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Learn More</button>
+                </div>
+            </div>
+            
+            <!-- Card 2: Consortiums -->
+            <div class="impact-card">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <span class="text-4xl">🤝</span>
+                        <h2 class="ml-4 text-2xl font-bold text-indigo-600">Collaborative Consortiums</h2>
+                    </div>
+                    <p class="mt-4 text-slate-600">When multiple independent organizations need to collaborate, establishing a shared, trusted digital infrastructure is a major challenge.</p>
+                </div>
+                <div class="details-content">
+                    <div class="px-6 pb-6">
+                        <ul class="space-y-3 text-slate-600 list-disc list-inside">
+                            <li><strong>Trustless Collaboration:</strong> Enables groups like supply chains or research alliances to create a common, trusted naming service where no single member can unilaterally alter records, fostering high data integrity.</li>
+                            <li><strong>Stable Naming for Shared Resources:</strong> Simplifies integration between members' systems by providing stable, human-readable names for shared APIs and data, ensuring resilience even if one member's infrastructure fails.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 border-t border-slate-200 pt-4">
+                    <button class="toggle-details-btn font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Learn More</button>
+                </div>
+            </div>
+
+            <!-- Card 3: Critical Infrastructure & IoT -->
+            <div class="impact-card">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <span class="text-4xl">⚙️</span>
+                        <h2 class="ml-4 text-2xl font-bold text-indigo-600">Critical Infrastructure & IoT</h2>
+                    </div>
+                    <p class="mt-4 text-slate-600">For systems where downtime is not an option, the high availability and fault tolerance of our design have a profound impact.</p>
+                </div>
+                <div class="details-content">
+                    <div class="px-6 pb-6">
+                        <ul class="space-y-3 text-slate-600 list-disc list-inside">
+                            <li><strong>Uninterrupted Service:</strong> In environments like smart grids or hospital networks, our system's automatic failover ensures the name resolution service remains operational 24/7, preventing catastrophic failures.</li>
+                            <li><strong>Secure Naming for IoT:</strong> Creates a secure, private naming network for thousands of IoT devices in environments like factories, preventing device hijacking through DNS manipulation.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 border-t border-slate-200 pt-4">
+                    <button class="toggle-details-btn font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Learn More</button>
+                </div>
+            </div>
+
+            <!-- Card 4: Community Networks -->
+            <div class="impact-card">
+                <div class="p-6">
+                    <div class="flex items-center">
+                        <span class="text-4xl">📢</span>
+                        <h2 class="ml-4 text-2xl font-bold text-indigo-600">Community Networks</h2>
+                    </div>
+                    <p class="mt-4 text-slate-600">While designed for permissioned networks, the underlying principles provide a powerful blueprint for censorship-resistant community networks.</p>
+                </div>
+                <div class="details-content">
+                    <div class="px-6 pb-6">
+                        <ul class="space-y-3 text-slate-600 list-disc list-inside">
+                            <li><strong>Censorship Resistance:</strong> Activist groups, journalists, or communities in restrictive environments can deploy their own instance to create a naming infrastructure that is not subject to takedown orders from a central government or corporation.</li>
+                            <li><strong>Information Freedom:</strong> Ensures that the ability for a community to communicate and share information remains intact and under its own control.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-6 pb-6 border-t border-slate-200 pt-4">
+                    <button class="toggle-details-btn font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">Learn More</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButtons = document.querySelectorAll('.toggle-details-btn');
+
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const card = button.closest('.impact-card');
+                    const content = card.querySelector('.details-content');
+                    
+                    const isExpanded = content.classList.contains('expanded');
+                    
+                    if (isExpanded) {
+                        content.classList.remove('expanded');
+                        button.textContent = 'Learn More';
+                    } else {
+                        content.classList.add('expanded');
+                        button.textContent = 'Show Less';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
