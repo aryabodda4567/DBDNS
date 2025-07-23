@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: A Fault-Tolerant Decentralized DNS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The infographic is designed as a top-to-bottom narrative scroll. It begins with a hook (The DNS Dilemma), presents the core problems, introduces the proposed solution as the hero, explains the key innovation (Round-Robin PoA) with a visual diagram, details the architecture and scalability with flowcharts, and concludes with the key benefits. This linear story-telling structure is ideal for an infographic, guiding the user logically from problem to solution. -->
+    <!-- Visualization & Content Choices: Problem Statement -> Goal: Compare -> Viz: Side-by-side diagram. Consensus Mechanism -> Goal: Organize/Explain Process -> Viz: HTML/CSS flowchart. Governance -> Goal: Inform -> Viz: Donut Chart (Chart.js). Node Architecture -> Goal: Organize -> Viz: Icon-based cards. Scalability -> Goal: Explain Concept -> Viz: Visual diagram of pruning/checkpointing. This mix of diagrams, charts, and text breaks down complex information into easily digestible visual chunks, confirming NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #19376D;
+        }
+        .bg-primary-dark { background-color: #0B2447; }
+        .bg-primary-medium { background-color: #19376D; }
+        .bg-primary-light { background-color: #576CBC; }
+        .bg-primary-extralight { background-color: #A5D7E8; }
+        .text-primary-dark { color: #0B2447; }
+        .text-primary-medium { color: #19376D; }
+        .text-primary-light { color: #576CBC; }
+        .text-primary-extralight { color: #A5D7E8; }
+        .border-primary-light { border-color: #576CBC; }
+        .flow-arrow {
+            position: relative;
+        }
+        .flow-arrow::after {
+            content: '→';
+            position: absolute;
+            right: -1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #A5D7E8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-primary-dark text-white">
+        <div class="max-w-5xl mx-auto px-6 py-20 text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Rethinking DNS</h1>
+            <p class="mt-4 text-lg md:text-xl text-primary-extralight max-w-3xl mx-auto">Introducing a Fault-Tolerant, Decentralized Domain Name System Built on a Private Blockchain.</p>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 py-16 space-y-20">
+
+        <section id="problem">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">The DNS Dilemma</h2>
+            <p class="mt-4 text-center max-w-2xl mx-auto text-lg">The traditional DNS is a single point of failure. Our solution is resilient by design.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-2xl shadow-lg border-2 border-red-500/50">
+                    <h3 class="text-xl font-bold text-center text-red-600">Traditional DNS: Centralized</h3>
+                    <div class="mt-4 text-center">
+                        <div class="inline-block bg-red-100 text-red-700 font-bold p-4 rounded-full">Authority</div>
+                        <div class="text-2xl my-2">↓</div>
+                        <div class="inline-block bg-red-100 text-red-700 font-bold p-4 rounded-lg">Your Domain</div>
+                        <p class="mt-4 text-sm text-red-700">A failure or block at the top takes you offline. This is a **Single Point of Failure**.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg border-2 border-primary-light/50">
+                    <h3 class="text-xl font-bold text-center text-primary-light">Our DNS: Decentralized</h3>
+                     <div class="mt-4 flex justify-center items-center gap-4">
+                        <div class="bg-primary-extralight text-primary-dark font-bold p-4 rounded-lg">Node</div>
+                        <div class="bg-primary-extralight text-primary-dark font-bold p-4 rounded-lg">Node</div>
+                        <div class="bg-primary-extralight text-primary-dark font-bold p-4 rounded-lg">Node</div>
+                    </div>
+                    <p class="mt-4 text-center text-sm text-primary-medium">Your domain is secured by a network of trusted nodes. There is **no single point of failure**.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">The Innovation: Round-Robin Proof of Authority</h2>
+            <p class="mt-4 text-center max-w-3xl mx-auto text-lg">Our system uses a custom consensus mechanism that is efficient, fork-free, and highly fault-tolerant.</p>
+            <div class="mt-12 bg-primary-medium text-white p-8 rounded-2xl shadow-lg">
+                <h3 class="text-2xl font-bold text-center">How It Works: A Fault-Tolerant Cycle</h3>
+                <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 text-center">
+                    <div class="flow-arrow font-bold text-lg">
+                        <div class="w-24 h-24 bg-primary-extralight text-primary-dark rounded-full flex items-center justify-center">Leader 1 Creates Block</div>
+                    </div>
+                    <div class="flow-arrow font-bold text-lg">
+                        <div class="w-24 h-24 bg-primary-extralight text-primary-dark rounded-full flex items-center justify-center">Leader 2 Creates Block</div>
+                    </div>
+                    <div class="font-bold text-lg">
+                        <div class="w-24 h-24 bg-red-300 text-red-900 rounded-full flex items-center justify-center border-4 border-dashed border-red-500">Leader 3 Fails (Timeout!)</div>
+                    </div>
+                    <div class="flow-arrow font-bold text-lg">
+                        <div class="w-24 h-24 bg-primary-extralight text-primary-dark rounded-full flex items-center justify-center">Leader 4 Creates Block</div>
+                    </div>
+                </div>
+                <p class="mt-8 text-center text-primary-extralight">The network automatically detects the failed node, skips its turn, and continues the cycle, ensuring the blockchain **never halts**.</p>
+            </div>
+        </section>
+
+        <section id="architecture">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">System Architecture</h2>
+            <p class="mt-4 text-center max-w-2xl mx-auto text-lg">Our design uses a unified on-chain ledger and clear roles for network participants.</p>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">Node Roles</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">👑</span>
+                            <div>
+                                <h4 class="font-semibold">Leader Nodes</h4>
+                                <p class="text-sm text-slate-600">Trusted nodes that create blocks and vote on governance.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">👥</span>
+                            <div>
+                                <h4 class="font-semibold">Normal Nodes</h4>
+                                <p class="text-sm text-slate-600">Submit transactions and serve DNS queries to clients.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">📚</span>
+                            <div>
+                                <h4 class="font-semibold">Archival Node</h4>
+                                <p class="text-sm text-slate-600">A designated leader that stores the entire blockchain history for auditing.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                     <h3 class="text-xl font-bold mb-4">On-Chain Governance</h3>
+                     <p class="text-slate-600 mb-4 text-center">Promoting a new leader requires a >2/3 supermajority vote.</p>
+                     <div class="chart-container">
+                        <canvas id="governanceChart"></canvas>
+                     </div>
+                </div>
+            </div>
+             <div class="mt-8 bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">System Interfaces</h3>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 text-center p-4 bg-slate-100 rounded-lg">
+                        <h4 class="font-semibold">Standard DNS Server (Port 53)</h4>
+                        <p class="text-sm text-slate-600 mt-1">For transparent, high-volume lookups from any device.</p>
+                    </div>
+                     <div class="flex-1 text-center p-4 bg-slate-100 rounded-lg">
+                        <h4 class="font-semibold">Administrative REST API</h4>
+                        <p class="text-sm text-slate-600 mt-1">For management tasks like registering new domains.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scalability">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">Built for the Future: Scalability</h2>
+            <p class="mt-4 text-center max-w-2xl mx-auto text-lg">We use State Pruning and Checkpointing to keep the network fast and efficient over the long term.</p>
+            <div class="mt-12 bg-white p-8 rounded-2xl shadow-lg">
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold">Full Chain (Archival Node)</h4>
+                        <div class="flex gap-1 mt-2 flex-wrap">
+                            <div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-yellow-400 rounded font-bold text-yellow-800 flex items-center justify-center text-xs">C</div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Pruned Chain (Normal Node)</h4>
+                        <div class="flex gap-1 mt-2 flex-wrap">
+                            <div class="w-6 h-8 bg-slate-200 border-2 border-dashed border-slate-400 rounded"></div><div class="w-6 h-8 bg-slate-200 border-2 border-dashed border-slate-400 rounded"></div><div class="w-6 h-8 bg-slate-200 border-2 border-dashed border-slate-400 rounded"></div><div class="w-6 h-8 bg-slate-200 border-2 border-dashed border-slate-400 rounded"></div><div class="w-6 h-8 bg-yellow-400 rounded font-bold text-yellow-800 flex items-center justify-center text-xs">C</div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div><div class="w-6 h-8 bg-primary-light rounded"></div>
+                        </div>
+                        <p class="text-sm text-slate-600 mt-2">Normal nodes only need to store the latest **Checkpoint (C)** and recent blocks, keeping them lightweight and fast.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="bg-primary-dark text-white text-center py-8">
+        <p>A Secure, Resilient, and Sovereign DNS Solution.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('governanceChart');
+            if (!ctx) return;
+
+            const governanceChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Votes to Approve', 'Votes Remaining'],
+                    datasets: [{
+                        label: 'Votes',
+                        data: [7, 3],
+                        backgroundColor: [
+                            '#19376D', // primary-medium
+                            '#A5D7E8'  // primary-extralight
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 4,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#19376D',
+                                font: {
+                                    family: "'Inter', sans-serif",
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
