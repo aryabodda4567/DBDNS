@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Comparison: DNS Implementation Approaches</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate (base), Gray (ConsortiumDNS), Indigo (Our Design), Red (Gap), Green (Solution) -->
+    <!-- Application Structure Plan: A side-by-side comparison layout using a two-column grid. This structure is chosen to directly contrast the implementation of "ConsortiumDNS" with "Our Design," making the key differences and improvements immediately apparent. The user flow is a simple vertical scroll, allowing for easy comparison of corresponding features. -->
+    <!-- Visualization & Content Choices: Report Info: Implementation details of two systems. Goal: Compare and contrast. Viz/Presentation Method: Information cards for each feature. Simple CSS diagrams to visualize architectures. Color-coded cards to highlight the critical "Gap" in the related work and the corresponding "Solution" in our design. Interaction: Primarily visual comparison with subtle hover effects. Justification: This direct, visual comparison is the most effective way to communicate the value proposition and innovation of our design over the existing literature. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .comparison-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .card-content {
+            flex-grow: 1;
+        }
+        .gap-card {
+            background-color: #fee2e2; /* red-100 */
+            border: 2px dashed #f87171; /* red-400 */
+        }
+        .solution-card {
+            background-color: #dcfce7; /* green-100 */
+            border: 2px dashed #4ade80; /* green-400 */
+        }
+        .arch-box {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Implementation: A Comparative Analysis</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">A side-by-side look at the implementation of "ConsortiumDNS" versus our project's enhanced design.</p>
+        </header>
+
+        <div class="space-y-8">
+            <!-- Headers -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <h2 class="text-3xl font-bold text-center text-slate-700">Related Work: ConsortiumDNS</h2>
+                <h2 class="text-3xl font-bold text-center text-indigo-600">Our Design Overview</h2>
+            </div>
+
+            <!-- Row 1: Architecture -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-slate-800 mb-4">Architectural Framework</h3>
+                        <p class="text-slate-600 mb-4">Employs a complex **three-layer architecture** to separate data storage from on-chain operations, aiming to reduce storage load on nodes.</p>
+                        <div class="space-y-2">
+                            <div class="arch-box bg-slate-100 text-slate-700">External Storage Layer</div>
+                            <div class="text-center text-slate-400 font-bold">↓</div>
+                            <div class="arch-box bg-slate-100 text-slate-700">Blockchain Layer (Pointers)</div>
+                             <div class="text-center text-slate-400 font-bold">↓</div>
+                            <div class="arch-box bg-slate-100 text-slate-700">Consensus Layer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-indigo-700 mb-4">Design Philosophy</h3>
+                        <p class="text-slate-600 mb-4">Adopts a **unified on-chain architecture**. All data and operations are stored directly on the blockchain for simplicity and complete auditability.</p>
+                        <div class="space-y-2 h-full flex flex-col">
+                             <div class="arch-box bg-indigo-100 text-indigo-700 flex-grow flex items-center justify-center">
+                                Blockchain<br>(Data + Operations + Consensus)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Node Roles -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-slate-800 mb-4">Node Roles</h3>
+                        <p class="text-slate-600">Defines two distinct node types:</p>
+                        <ul class="mt-2 list-disc list-inside text-slate-600 space-y-1">
+                            <li><strong>Miner Nodes:</strong> Authoritative nodes that validate transactions and create blocks.</li>
+                            <li><strong>Query Nodes:</strong> Non-consensus nodes that handle DNS lookups to improve performance.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-indigo-700 mb-4">Node Architecture</h3>
+                        <p class="text-slate-600">Also utilizes two roles, but their interaction is governed by a robust protocol:</p>
+                        <ul class="mt-2 list-disc list-inside text-slate-600 space-y-1">
+                            <li><strong>Leader Nodes:</strong> Authoritative nodes that create blocks in a deterministic, rotating schedule.</li>
+                            <li><strong>Normal Nodes:</strong> Handle queries and submit transactions to the network.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Storage & Tech -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                 <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-slate-800 mb-4">Storage & Synchronization</h3>
+                        <p class="text-slate-600">Uses direct file system storage with in-memory indexes for fast lookups. A **Gossip protocol** is used to synchronize blocks between nodes.</p>
+                    </div>
+                </div>
+                 <div class="comparison-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-indigo-700 mb-4">Technology Stack</h3>
+                        <p class="text-slate-600">The entire system will be implemented in the **Java ecosystem**, leveraging mature libraries for networking, cryptography (Bouncy Castle), and data handling (Jackson).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Gap vs Solution -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div class="comparison-card gap-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-red-800 mb-4">Acknowledged Implementation Gap</h3>
+                        <p class="text-red-700">The authors explicitly state their system has **low throughput** and needs a **"more efficient consensus mechanism."**</p>
+                        <p class="mt-2 text-red-700 font-semibold">The paper proposes a framework but does not deliver a defined, fault-tolerant protocol for how nodes should agree on the state of the chain.</p>
+                    </div>
+                </div>
+                <div class="comparison-card solution-card">
+                    <div class="p-6 card-content">
+                        <h3 class="font-bold text-xl text-green-800 mb-4">Our Cornerstone Solution</h3>
+                        <p class="text-green-700">Our design's cornerstone is the **Round-Robin Proof of Authority (PoA) with a Timeout**.</p>
+                        <p class="mt-2 text-green-700 font-semibold">This custom protocol provides a deterministic, fork-free, and highly fault-tolerant method for consensus, directly solving the gap left by previous work.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
