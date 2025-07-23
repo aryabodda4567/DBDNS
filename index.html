@@ -12,36 +12,27 @@
             background-color: #f1f5f9; /* slate-100 */
         }
         .nav-link.active {
-            background-color: #e0e7ff; /* indigo-100 */
+            background-color: #eef2ff; /* indigo-50 */
             color: #4338ca; /* indigo-700 */
             font-weight: 600;
         }
-        #content-area h1 {
+        #content-area h1, #content-area h2, #content-area h3, #content-area h4 {
+            scroll-margin-top: 2rem;
+        }
+        #content-area h3 { /* Corresponds to the main titles from the source files */
             font-size: 2.25rem; /* text-4xl */
             font-weight: 800;
             color: #1e293b; /* slate-800 */
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
         }
-        #content-area h2 {
-            font-size: 1.875rem; /* text-3xl */
+        #content-area h4 { /* Corresponds to sub-headings */
+            font-size: 1.5rem; /* text-2xl */
             font-weight: 700;
             color: #4f46e5; /* indigo-600 */
             margin-bottom: 1rem;
             margin-top: 2rem;
-        }
-        #content-area h3 {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 700;
-            color: #334155; /* slate-700 */
-            margin-bottom: 0.75rem;
-            margin-top: 1.5rem;
-        }
-        #content-area h4 {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600;
-            color: #475569; /* slate-600 */
-            margin-bottom: 0.5rem;
-            margin-top: 1rem;
         }
         #content-area p {
             color: #475569; /* slate-600 */
@@ -60,51 +51,143 @@
         #content-area strong {
             color: #1e293b; /* slate-800 */
         }
-        #content-area .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #4f46e5;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 5rem auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-    <div class="max-w-screen-xl mx-auto">
-        <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-            <aside class="lg:col-span-3 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto p-6 bg-white border-r border-slate-200">
-                <header class="mb-8">
-                    <h1 class="text-2xl font-bold text-slate-900">Decentralized DNS</h1>
-                    <p class="text-sm text-slate-500">Project Documentation</p>
-                </header>
-                <nav>
-                    <ul id="nav-menu" class="space-y-2">
-                        <!-- Navigation links will be injected here -->
-                    </ul>
-                </nav>
-            </aside>
+    <div class="relative flex min-h-screen">
+        <aside class="w-64 lg:w-72 flex-shrink-0 fixed lg:sticky top-0 h-screen overflow-y-auto p-6 bg-white border-r border-slate-200">
+            <header class="mb-8">
+                <h1 class="text-2xl font-bold text-slate-900">Decentralized DNS</h1>
+                <p class="text-sm text-slate-500">Project Documentation</p>
+            </header>
+            <nav>
+                <ul id="nav-menu" class="space-y-1">
+                    <!-- Navigation links will be injected here -->
+                </ul>
+            </nav>
+        </aside>
 
-            <main class="lg:col-span-9">
-                <div id="content-area" class="p-6 sm:p-8 lg:p-12 bg-white m-0 lg:m-8 rounded-2xl shadow-lg min-h-screen">
-                    <!-- Content will be loaded here -->
-                    <div class="loader"></div>
-                </div>
-            </main>
-        </div>
+        <main class="flex-1 p-6 sm:p-8 lg:p-12">
+            <div id="content-area" class="bg-white p-6 sm:p-8 lg:p-12 rounded-2xl shadow-lg min-h-full">
+                <!-- Content will be loaded here -->
+            </div>
+        </main>
     </div>
 
     <script>
+        const pageContent = {
+            'project-overview.html': `
+                <h3>Project Overview</h3>
+                <p>This project involves the design and implementation of a secure, resilient, and decentralized Domain Name System (DNS) built upon a purpose-built permissioned blockchain. The traditional DNS architecture, while foundational to the internet, suffers from centralization, creating single points of failure and making it susceptible to censorship and targeted attacks. This project directly addresses these vulnerabilities.</p>
+                <p>The proposed solution is a self-contained ecosystem for private or consortium networks (e.g., corporate LANs, inter-organizational WANs) where trust, data integrity, and high availability are paramount. We will develop a blockchain from scratch in Java, featuring a novel and highly efficient consensus mechanism: <strong>Round-Robin Proof of Authority (PoA) with a Timeout</strong>.</p>
+                <p>This mechanism ensures that only authorized "Leader" nodes can create blocks in a predictable, sequential order. This design eliminates the possibility of forks and the need for computationally expensive mining. Crucially, its built-in timeout feature provides fault tolerance, allowing the network to continue functioning seamlessly even if a leader node goes offline. The system will support core DNS functionalities—registration and lookup—and will feature an on-chain governance model for managing the set of trusted leader nodes.</p>
+                <p>The final deliverable will be a functional software package that allows organizations to deploy their own private, decentralized, and fault-tolerant DNS network.</p>
+            `,
+            'problem-statement.html': `
+                <h3>Explanation of Problem Statement</h3>
+                <p>The Domain Name System (DNS) is a fundamental and indispensable component of the internet, functioning as its distributed phonebook by translating human-memorable domain names into the numerical IP addresses required for network communication. Despite its critical role and widespread success, the foundational architecture of DNS, designed in a different era of the internet, is built upon a hierarchical and centralized model. This design, while effective for global-scale name resolution, harbors inherent structural weaknesses that present significant and ongoing challenges to the security, stability, and autonomy of modern digital infrastructures. This project directly addresses these core vulnerabilities.</p>
+                <h4>The primary problems stemming from the traditional DNS architecture can be detailed as follows:</h4>
+                <p><strong>1. Centralization and Single Points of Failure (SPOF):</strong> The DNS system is structured as a tree, with a limited number of authoritative root servers at its apex. Control over top-level domains (TLDs) like <code>.com</code> or <code>.org</code> is delegated to a small number of registries, and ultimate oversight rests with centralized bodies like the Internet Corporation for Assigned Names and Numbers (ICANN). This centralization creates critical single points of failure. A technical failure, a successful cyberattack, or a malicious action against any of these central authorities could have catastrophic consequences, potentially rendering vast portions of the internet inaccessible.</p>
+                <p><strong>2. Security Vulnerabilities:</strong> The protocol itself is susceptible to numerous security threats that malicious actors regularly exploit. These include DDoS Attacks and DNS Cache Poisoning (Spoofing).</p>
+                <p><strong>3. Censorship and Lack of Sovereignty:</strong> The centralized control structure of DNS makes it a powerful tool for censorship. Governments or other authorities can compel central registries or ISPs to remove or block access to specific domains, effectively silencing voices or restricting the flow of information.</p>
+                <p><strong>4. Inefficiency and Complexity in Management:</strong> The process for registering, transferring, or updating domain names can be cumbersome and slow, involving multiple intermediaries such as registrars and registries. This introduces administrative overhead and potential delays.</p>
+            `,
+            'previous-version-of-ps.html': `
+                <h3>Analysis of Previous Work: ConsortiumDNS</h3>
+                <p>To contextualize our project, it is essential to analyze prior art in the field of decentralized DNS. The academic paper <strong>"ConsortiumDNS: A Distributed Domain Name Service Based on Consortium Chain"</strong> provides a particularly relevant foundation. This paper validates the core problem statement and proposes a solution that shares a similar philosophy to our project, yet differs significantly in its architecture and completeness, highlighting the specific gaps our work aims to fill.</p>
+                <h4>Problem Focus of ConsortiumDNS</h4>
+                <p>The authors of ConsortiumDNS correctly identify the primary weaknesses of both the traditional DNS system and early blockchain-based alternatives, including the security flaws of Namecoin and the performance issues of Blockstack.</p>
+                <h4>The Proposed Solution and Key Features</h4>
+                <p>ConsortiumDNS introduced several key architectural concepts, including a consortium chain model, a three-layer architecture (Storage, Blockchain, Consensus) to manage storage bloat, and two node roles (miner and query nodes).</p>
+                <h4>Identified Drawbacks and Limitations</h4>
+                <p>While providing a strong conceptual framework, the paper is transparent about its significant limitations. The most critical drawback is an <strong>undefined and inefficient consensus mechanism</strong>. The authors explicitly state their system has low throughput and requires a more efficient protocol for future work. This indicates that the proposed system, in its described state, lacks a robust, clearly defined, and fault-tolerant method for reaching agreement, leaving a major architectural and reliability gap that our project directly addresses.</p>
+            `,
+            'further-enhancement.html': `
+                <h3>Further Enhancements and Uniqueness of the Solution</h3>
+                <p>The uniqueness of our solution is derived from a synthesis of pragmatic design choices that result in a system that is demonstrably more resilient, practical, and fully realized than its predecessors. The key enhancements that distinguish our project are detailed below.</p>
+                <h4>1. A Complete and Fault-Tolerant Consensus Protocol</h4>
+                <p>The most significant innovation is the design of a specific, efficient, and robust consensus mechanism: <strong>Round-Robin Proof of Authority (PoA) with an Integrated Timeout</strong>. This directly addresses the critical weakness identified in "ConsortiumDNS".</p>
+                <ul>
+                    <li><strong>Deterministic and Fork-Free by Design:</strong> The "Round-Robin" schedule eliminates the possibility of network forks.</li>
+                    <li><strong>Guaranteed Liveness through a Timeout Mechanism:</strong> Ensures the network remains operational by gracefully handling the failure of leader nodes.</li>
+                </ul>
+                <h4>2. Defined and Democratic On-Chain Governance</h4>
+                <p>Our project defines a robust governance model for managing the trusted set of Leader Nodes using a <strong>>2/3 supermajority vote</strong> for promoting new leaders. This prevents a single malicious or failed node from vetoing the network's growth.</p>
+                <h4>3. Architectural Simplicity and Enhanced Auditability</h4>
+                <p>We make a deliberate design choice to favor architectural simplicity by maintaining all DNS data on-chain. This reduces implementation complexity and provides a single, self-contained, and fully auditable source of truth.</p>
+            `,
+            'approaches-methods-algos.html': `
+                <h3>Approaches, Methods, and Algorithms</h3>
+                <p>The architecture of our decentralized DNS system is built upon a carefully selected set of approaches, methods, and algorithms designed to ensure security, efficiency, and high availability.</p>
+                <h4>1. Core Approach: Permissioned Blockchain</h4>
+                <p>The foundational approach is a <strong>private, permissioned blockchain</strong>. This model was chosen for enhanced security, high performance (by avoiding PoW), and governance control suitable for enterprise environments.</p>
+                <h4>2. Core Method: Round-Robin Proof of Authority (PoA) Consensus</h4>
+                <p>The heart of our system is its consensus method. In PoA, a set of authorized <strong>"Leader Nodes"</strong> exclusively create new blocks based on a deterministic <strong>Round-Robin schedule</strong>. This method is inherently fork-free. To handle node failures, we incorporate a <strong>timeout-based fault tolerance</strong> mechanism, ensuring network liveness.</p>
+                <h4>3. Supporting Algorithms and Protocols</h4>
+                <ul>
+                    <li><strong>Digital Signatures (ECDSA):</strong> Ensures authenticity and non-repudiation for all transactions and blocks.</li>
+                    <li><strong>Cryptographic Hashing (SHA-256):</strong> Maintains the integrity of the blockchain by linking blocks together.</li>
+                    <li><strong>Network Communication Protocol (P2P Broadcast):</strong> A simple peer-to-peer protocol to efficiently propagate information across the network.</li>
+                </ul>
+            `,
+            'implementation.html': `
+                <h3>Implementation and Design Overview</h3>
+                <p>This section first examines the implementation approach of "ConsortiumDNS" and then presents a high-level overview of our own project's design, emphasizing the key architectural decisions that distinguish our approach.</p>
+                <h4>1. Implementation of Related Work: "ConsortiumDNS"</h4>
+                <p>ConsortiumDNS uses a three-layer architecture (Storage, Blockchain, Consensus), miner/query node roles, file system storage with in-memory indexes, and a Gossip protocol for synchronization. Its primary acknowledged gap is an undefined and inefficient consensus mechanism.</p>
+                <h4>2. Our Design Overview</h4>
+                <p>Our design is a complete and practical blueprint. We use a <strong>unified on-chain architecture</strong> for simplicity and auditability. The system is built on the Java ecosystem, and its core components include our custom <strong>Round-Robin PoA with Timeout</strong> consensus mechanism, a P2P networking layer, and a user-facing REST API.</p>
+            `,
+            'life-cycle.html': `
+                <h3>System Lifecycle</h3>
+                <p>This section explains the complete operational flow of the system, from the moment the network is first created to the process of registering, resolving, and updating a DNS record.</p>
+                <h4>Phase 1: Network Initialization</h4>
+                <p>An administrator deploys the first "Genesis Node," which creates the Genesis Block containing the public keys of the initial Leader Nodes. Other leaders then join and synchronize this chain.</p>
+                <h4>Phase 2: A User Registers a New Domain</h4>
+                <p>A user sends a signed transaction request. The transaction is broadcast to the network. The active leader validates it, includes it in a new block, and broadcasts the block. All nodes verify and add the block, confirming the registration.</p>
+                <h4>Phase 3: A User Resolves (Looks Up) a Domain</h4>
+                <p>A user queries any node via an API. The node performs a fast, local read on its copy of the blockchain and returns the IP address instantly.</p>
+                <h4>Phase 4: The Owner Updates a DNS Record</h4>
+                <p>The owner submits a new transaction signed with the original private key. The system processes it like a new registration, with the latest record taking precedence during lookups.</p>
+            `,
+            'requirements.html': `
+                <h3>Software and Hardware Requirements</h3>
+                <p>This section details the necessary software and hardware specifications for both the development and deployment of the decentralized DNS system.</p>
+                <h4>1. Development Environment</h4>
+                <ul>
+                    <li><strong>Software:</strong> Modern 64-bit OS (Windows, macOS, Linux), JDK 11+, IDE (IntelliJ, Eclipse), Build Tool (Maven, Gradle), Git.</li>
+                    <li><strong>Hardware:</strong> Multi-core CPU (i5/Ryzen 5+), 16 GB RAM recommended, 50 GB SSD space.</li>
+                </ul>
+                <h4>2. Deployment Environment (per-node)</h4>
+                <ul>
+                    <li><strong>Software:</strong> Server-grade 64-bit Linux (Ubuntu Server 20.04+), JRE 11+, systemd, configured firewall.</li>
+                    <li><strong>Hardware:</strong> 2+ CPU cores, 4 GB RAM recommended, 100 GB SSD space, and a reliable, low-latency network connection.</li>
+                </ul>
+            `,
+            'applications.html': `
+                <h3>Real-World Impact of Project</h3>
+                <p>This project has significant and practical real-world implications, providing tangible benefits in security, resilience, and operational sovereignty for a wide range of organizations and use cases.</p>
+                <h4>1. Enhanced Security for Enterprise Networks</h4>
+                <p>Creates a tamper-proof internal naming system and allows corporations to manage private top-level domains (e.g., .mycorp) with complete sovereignty.</p>
+                <h4>2. Trusted Collaboration in Consortiums</h4>
+                <p>Enables groups like supply chains or research alliances to create a common, trusted naming service where no single member can unilaterally alter records.</p>
+                <h4>3. Increased Resilience for Critical Infrastructure & IoT</h4>
+                <p>The system's high availability and automatic failover ensure naming services for smart grids, hospitals, or IoT networks remain operational 24/7.</p>
+                <h4>4. A Blueprint for Censorship-Resistant Networks</h4>
+                <p>The principles provide a powerful blueprint for community-run networks seeking to create a naming infrastructure that is not subject to takedown orders.</p>
+            `,
+            'abstract.html': `
+                <h3>Conclusion</h3>
+                <p>The centralization inherent in the traditional Domain Name System represents a significant vulnerability. This project successfully demonstrates that leveraging blockchain technology provides a viable and superior alternative, particularly for private and consortium networks.</p>
+                <p>The cornerstone of our solution is the design of a novel <strong>Round-Robin Proof of Authority (PoA) consensus algorithm with an integrated timeout mechanism</strong>. This approach provides a pragmatic engineering solution that offers deterministic, fork-free block creation while guaranteeing network liveness and high availability.</p>
+                <p>In conclusion, this project provides more than just an alternative to traditional DNS; it presents a new paradigm for network resource management. By combining the immutability of blockchain with a novel and practical consensus algorithm, we have laid out a complete blueprint for a system that is secure, resilient, and places control firmly in the hands of the network's participants.</p>
+            `
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             const navMenu = document.getElementById('nav-menu');
             const contentArea = document.getElementById('content-area');
-            const repoBaseUrl = 'https://raw.githubusercontent.com/aryabodda4567/DBDNS/main/';
 
             const pages = [
                 { file: 'project-overview.html', title: 'Project Overview' },
@@ -119,38 +202,23 @@
                 { file: 'abstract.html', title: 'Conclusion' }
             ];
 
-            const fetchPageContent = async (fileName) => {
-                contentArea.innerHTML = '<div class="loader"></div>';
-                try {
-                    const response = await fetch(repoBaseUrl + fileName);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const html = await response.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const bodyContent = doc.body.innerHTML;
-                    contentArea.innerHTML = bodyContent;
-                } catch (error) {
-                    console.error('Error fetching page:', error);
-                    contentArea.innerHTML = `<p class="text-red-500 font-bold">Error: Could not load content for ${fileName}. Please check the file path and network connection.</p>`;
-                }
+            const loadPageContent = (fileName) => {
+                contentArea.innerHTML = pageContent[fileName] || `<p>Content not found for ${fileName}.</p>`;
             };
 
-            pages.forEach((page, index) => {
+            pages.forEach((page) => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
                 a.href = `#${page.file}`;
                 a.textContent = page.title;
-                a.className = 'nav-link block w-full text-left px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-200 transition-colors';
+                a.className = 'nav-link block w-full text-left px-4 py-3 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors text-sm';
                 a.dataset.file = page.file;
 
                 a.addEventListener('click', (e) => {
                     e.preventDefault();
                     document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
                     a.classList.add('active');
-                    fetchPageContent(page.file);
-                    // Update URL hash without jumping
+                    loadPageContent(page.file);
                     history.pushState(null, '', `#${page.file}`);
                 });
 
@@ -164,8 +232,7 @@
                 const linkToActivate = document.querySelector(`.nav-link[data-file="${pageToLoad.file}"]`);
                 
                 if (linkToActivate) {
-                    linkToActivate.classList.add('active');
-                    fetchPageContent(pageToLoad.file);
+                    linkToActivate.click();
                 }
             };
             
