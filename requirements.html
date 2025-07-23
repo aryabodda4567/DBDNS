@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Dashboard: System Requirements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Slate & Indigo -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard with two primary views: "Development" and "Deployment." A prominent tabbed navigation allows users to switch between these contexts instantly. This structure is superior to a long document as it prevents users from having to scroll and compare disparate sections, providing a clear, focused view of the requirements for a specific environment at any given time. -->
+    <!-- Visualization & Content Choices: Report Info: Software and hardware specs. Goal: Clearly present technical requirements. Viz/Presentation Method: Icon-based cards for each requirement, grouped by "Software" and "Hardware." Interaction: Clicking the tabs instantly swaps the visible content. Justification: This card-based dashboard makes dense technical specifications scannable, visually organized, and more engaging. The use of icons aids in quick recognition of requirement categories. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .tab-btn.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .req-card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .req-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center my-12">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">System Requirements Dashboard</h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">An interactive guide to the software and hardware specifications for the decentralized DNS project.</p>
+        </header>
+
+        <!-- Tabs -->
+        <div class="mb-8 flex justify-center">
+            <div class="inline-flex rounded-lg shadow-sm bg-slate-200 p-1">
+                <button data-tab="development" class="tab-btn active px-6 py-2 font-semibold text-slate-700 rounded-md transition-colors">Development</button>
+                <button data-tab="deployment" class="tab-btn px-6 py-2 font-semibold text-slate-700 rounded-md transition-colors">Deployment</button>
+            </div>
+        </div>
+
+        <main>
+            <!-- Development Content -->
+            <div id="development" class="tab-content active">
+                <div class="space-y-10">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-6">Software Requirements</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💻</span>
+                                <h3 class="font-bold text-lg mt-3">Operating System</h3>
+                                <p class="text-slate-600 mt-1">Windows 10/11, macOS 11+, or Linux (Ubuntu 20.04+, etc.)</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">☕</span>
+                                <h3 class="font-bold text-lg mt-3">Java Development Kit</h3>
+                                <p class="text-slate-600 mt-1">Version 11 or newer.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💡</span>
+                                <h3 class="font-bold text-lg mt-3">IDE</h3>
+                                <p class="text-slate-600 mt-1">IntelliJ IDEA, Eclipse, or VS Code with Java extensions.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🛠️</span>
+                                <h3 class="font-bold text-lg mt-3">Build Tool</h3>
+                                <p class="text-slate-600 mt-1">Apache Maven 3.6+ or Gradle 6.8+.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🌿</span>
+                                <h3 class="font-bold text-lg mt-3">Version Control</h3>
+                                <p class="text-slate-600 mt-1">Git for source code management.</p>
+                            </div>
+                             <div class="req-card p-6">
+                                <span class="text-4xl">🧪</span>
+                                <h3 class="font-bold text-lg mt-3">API Testing Tool</h3>
+                                <p class="text-slate-600 mt-1">(Optional) Postman or Insomnia.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-6">Hardware Requirements</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🧠</span>
+                                <h3 class="font-bold text-lg mt-3">Processor</h3>
+                                <p class="text-slate-600 mt-1">Modern multi-core 64-bit CPU (Intel i5, AMD Ryzen 5 or better).</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💪</span>
+                                <h3 class="font-bold text-lg mt-3">RAM</h3>
+                                <p class="text-slate-600 mt-1">Minimum 8 GB, **16 GB recommended** for running multiple nodes.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💾</span>
+                                <h3 class="font-bold text-lg mt-3">Storage</h3>
+                                <p class="text-slate-600 mt-1">Minimum 50 GB free space. **SSD strongly recommended**.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deployment Content -->
+            <div id="deployment" class="tab-content">
+                <p class="text-center text-slate-600 mb-6 font-semibold">Requirements are specified on a per-node basis.</p>
+                <div class="space-y-10">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-6">Software Requirements</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🐧</span>
+                                <h3 class="font-bold text-lg mt-3">Operating System</h3>
+                                <p class="text-slate-600 mt-1">Server-grade 64-bit Linux (Ubuntu Server 20.04+, CentOS 8+, etc.).</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">⚙️</span>
+                                <h3 class="font-bold text-lg mt-3">Java Runtime (JRE)</h3>
+                                <p class="text-slate-600 mt-1">Version 11 or newer. A full JDK is not needed.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🛡️</span>
+                                <h3 class="font-bold text-lg mt-3">Firewall</h3>
+                                <p class="text-slate-600 mt-1">Configured to open necessary ports for P2P and API communication.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800 mb-6">Hardware Requirements</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="req-card p-6">
+                                <span class="text-4xl">🧠</span>
+                                <h3 class="font-bold text-lg mt-3">Processor</h3>
+                                <p class="text-slate-600 mt-1">Server-grade 64-bit CPU with at least **2 cores**.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💪</span>
+                                <h3 class="font-bold text-lg mt-3">RAM</h3>
+                                <p class="text-slate-600 mt-1">Minimum 2 GB, **4 GB recommended** for JVM buffer.</p>
+                            </div>
+                            <div class="req-card p-6">
+                                <span class="text-4xl">💾</span>
+                                <h3 class="font-bold text-lg mt-3">Storage</h3>
+                                <p class="text-slate-600 mt-1">Minimum 100 GB. **Server-grade SSD recommended**.</p>
+                            </div>
+                             <div class="req-card p-6 col-span-1 sm:col-span-2 lg:col-span-3">
+                                <span class="text-4xl">🌐</span>
+                                <h3 class="font-bold text-lg mt-3">Network</h3>
+                                <p class="text-slate-600 mt-1">A **reliable, low-latency** network connection is critical. 1 Gbps Ethernet for LAN/MAN, stable internet for WAN.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.dataset.tab;
+
+                    // Update button styles
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    button.classList.add('active');
+
+                    // Update content visibility
+                    tabContents.forEach(content => {
+                        if (content.id === tabId) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
